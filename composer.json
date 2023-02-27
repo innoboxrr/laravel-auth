@@ -1,0 +1,19 @@
+{
+    "name": "innoboxrr/laravel-auth",
+    "description": "Setup inicial para el proceso de autenticación con laravel",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Innoboxrr\\LaravelAuth\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Homero Raul",
+            "email": "h.raulvc@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
