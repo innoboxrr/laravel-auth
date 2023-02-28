@@ -1,6 +1,49 @@
 # Sistema de autenticación alternativo para Laravel
 
-Este es un sistema de autenticación alternativo para Laravel que provee rutas seguras para la autenticación y gestión de tokens. Las siguientes son las rutas disponibles:
+Este es un sistema de autenticación alternativo para Laravel que provee rutas seguras para la autenticación y gestión de tokens.
+
+# Instalación y Publicación de Archivo de Configuración de `innoboxrr/laravel-auth`
+
+El paquete `innoboxrr/laravel-auth` es un paquete de autenticación alternativo para Laravel. Este paquete incluye rutas seguras para la autenticación y gestión de tokens.
+
+Aquí se describe cómo instalar y publicar el archivo de configuración de `innoboxrr/laravel-auth` utilizando Artisan.
+
+## Instalación
+
+Para instalar el paquete `innoboxrr/laravel-auth`, utiliza Composer. Abre una terminal en la carpeta raíz de tu proyecto y ejecuta el siguiente comando:
+
+`composer require innoboxrr/laravel-auth`
+
+Una vez que hayas ejecutado este comando, Composer instalará el paquete en tu proyecto y actualizará el archivo `composer.json` de tu proyecto.
+
+## Publicación del archivo de configuración
+
+Para personalizar la configuración de `innoboxrr/laravel-auth`, debes publicar el archivo de configuración del paquete. Para hacer esto, utiliza el comando Artisan `vendor:publish`.
+
+Abre una terminal en la carpeta raíz de tu proyecto y ejecuta el siguiente comando:
+
+`php artisan vendor:publish --provider="Innoboxrr\LaravelAuth\Providers\LaravelAuthServiceProvider" --tag=config`
+
+
+Este comando publicará el archivo de configuración `config/laravel-auth.php` en la carpeta `config` de tu proyecto.
+
+Puedes editar este archivo para personalizar la configuración de `innoboxrr/laravel-auth`.
+
+### Uso
+
+Para utilizar `innoboxrr/laravel-auth` en tu proyecto Laravel, debes registrar los Service Providers `LaravelAuthServiceProvider` y `RouteServiceProvider` en tu aplicación.
+
+Abre el archivo `config/app.php` de tu proyecto y agrega las siguientes líneas en la sección `providers`:
+
+`'providers' => [
+// ...
+Innoboxrr\LaravelAuth\Providers\LaravelAuthServiceProvider::class,
+Innoboxrr\LaravelAuth\Providers\RouteServiceProvider::class,
+],`
+
+
+Una vez que hayas registrado estos Service Providers, puedes utilizar las rutas y funciones de autenticación proporcionadas por `innoboxrr/laravel-auth` en tu aplicación Laravel.
+
 
 ## Rutas de autenticación
 
