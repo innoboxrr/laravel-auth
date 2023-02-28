@@ -9,7 +9,7 @@ use Innoboxrr\LaravelAuth\Rules\SeccurePassword;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-class ResetRequest extends FormRequest
+class ResetPasswordRequest extends FormRequest
 {
 
     public function authorize(): bool
