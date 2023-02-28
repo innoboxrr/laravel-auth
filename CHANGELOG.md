@@ -15,7 +15,18 @@ y este proyecto sigue [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ### Fixed
 
-## [1.0.3] - 2023-02-2023
+## [1.0.4] - 27-02-2023
+
+### Added
+
+### Changed
+
+### Removed
+
+### Fixed
+ - Fix: ResetPasswordRequest.php does not comply with psr-4
+
+## [1.0.3] - 27-02-2023
 
 ### Added
 
@@ -26,7 +37,7 @@ y este proyecto sigue [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ### Fixed
 
-## [1.0.1] - 2023-02-2023
+## [1.0.1] - 27-02-2023
 
 ### Added
  - LoginTest
@@ -39,7 +50,7 @@ y este proyecto sigue [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 ### Fixed
 
 
-## [1.0.0] - 2023-02-2023
+## [1.0.0] - 27-02-2023
 
 ### Added
  - Se han creado todas las rutas de autenticación
