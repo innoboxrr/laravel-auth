@@ -15,7 +15,7 @@ class AuthenticationController extends Controller
     
     public function login(LoginRequest $request)
     {
-        return $request->handle()
+        return $request->handle();
     }
 
     public function register(RegisterRequest $request)

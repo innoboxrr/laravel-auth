@@ -37,7 +37,7 @@ class SecurePassword implements ValidationRule
 
     }
 
-    public function validate($attribute, $value, $fail)
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         
         if (!$this->passes($attribute, $value)) {

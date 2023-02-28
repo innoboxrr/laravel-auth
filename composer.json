@@ -8,6 +8,11 @@
             "Innoboxrr\\LaravelAuth\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Innoboxrr\\LaravelAuth\\Tests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "Homero Raul",
@@ -26,5 +31,8 @@
                 "Innoboxrr\\LaravelAuth\\Providers\\RouteServiceProvider"
             ]
         }
+    },
+    "require": {
+        "laravel/sanctum": "^3.2"
     }
 }

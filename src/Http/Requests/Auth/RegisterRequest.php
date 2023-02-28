@@ -2,11 +2,10 @@
 
 namespace Innoboxrr\LaravelAuth\Http\Requests\Auth;
 
-use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\Registered;
-use Innoboxrr\LaravelAuth\Rules\SeccurePassword;
+use Innoboxrr\LaravelAuth\Rules\SecurePassword;
 use Illuminate\Support\Facades\Hash;
 
 class RegisterRequest extends FormRequest
@@ -26,9 +25,9 @@ class RegisterRequest extends FormRequest
             
             'name' => ['required', 'string', 'max:255'],
             
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:App\Models\User'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
 
-            'password' => ['required', 'confirmed', new SeccurePassword],
+            'password' => ['required', 'confirmed', new SecurePassword],
 
         ];
 
@@ -46,7 +45,7 @@ class RegisterRequest extends FormRequest
     public function handle()
     {
 
-        $user = User::create($this->all());
+        $user = $this->resolveUserInstance()->create($this->all());
 
         event(new Registered($user));
 
@@ -55,6 +54,17 @@ class RegisterRequest extends FormRequest
         return $this->wantsJson()
             ? response()->json(['success' => true])
             : redirect(config('laravel-auth.routes.redirects.register'));
+
+    }
+
+    protected function resolveUserInstance()
+    {
+
+        $userClass = config('laravel-auth.user-class');
+
+        $userClass = app($userClass);
+
+        return new $userClass();
 
     }
     

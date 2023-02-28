@@ -2,6 +2,8 @@
 
 return [
 
+	'user-class' => 'App\\Models\\User',
+
 	'allow-registration' => true,
 
 	'routes' => [
