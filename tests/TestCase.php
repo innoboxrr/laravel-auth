@@ -20,6 +20,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
         // additional setup
 
         $this->loadLaravelMigrations(['--database' => 'testing']);
+        
         $this->artisan('migrate', ['--database' => 'testing'])->run();
 
         $this->password = $this->getPassword();
