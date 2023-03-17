@@ -34,18 +34,18 @@ Route::get(config('laravel-auth.routes.uris.email-verification'), 'Authenticatio
 
 // TOKEN
 
-Route::post(config('laravel-auth.routes.uris.create-token'), 'AuthenticationController@createToken')
+Route::post(config('laravel-auth.routes.uris.create-token'), 'TokenController@createToken')
 	->middleware(config('laravel-auth.routes.middlewares.create-token'))
 	->name(config('laravel-auth.routes.names.create-token'));
 
-Route::post(config('laravel-auth.routes.uris.tokens'), 'AuthenticationController@tokens')
+Route::post(config('laravel-auth.routes.uris.tokens'), 'TokenController@tokens')
 	->middleware(config('laravel-auth.routes.middlewares.tokens'))
 	->name(config('laravel-auth.routes.names.tokens'));
 
-Route::post(config('laravel-auth.routes.uris.revoke-token'), 'AuthenticationController@revokeToken')
+Route::post(config('laravel-auth.routes.uris.revoke-token'), 'TokenController@revokeToken')
 	->middleware(config('laravel-auth.routes.middlewares.revoke-token'))
 	->name(config('laravel-auth.routes.names.revoke-token'));
 
-Route::post(config('laravel-auth.routes.uris.flush-tokens'), 'AuthenticationController@flushTokens')
+Route::post(config('laravel-auth.routes.uris.flush-tokens'), 'TokenController@flushTokens')
 	->middleware(config('laravel-auth.routes.middlewares.flush-tokens'))
 	->name(config('laravel-auth.routes.names.flush-tokens'));

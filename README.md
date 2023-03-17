@@ -16,6 +16,23 @@ Para instalar el paquete `innoboxrr/laravel-auth`, utiliza Composer. Abre una te
 
 Una vez que hayas ejecutado este comando, Composer instalará el paquete en tu proyecto y actualizará el archivo `composer.json` de tu proyecto.
 
+Si deseas escapar la protección por CSRF modifica el middleware **VerifyCsrfToken**:
+
+``` php
+<?php
+
+namespace App\Http\Middleware;
+
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as Middleware;
+
+class VerifyCsrfToken extends Middleware
+{ 
+    protected $except = [
+        'auth/*'
+    ];
+}
+```
+
 ### Publicación del archivo de configuración
 
 Para personalizar la configuración de `innoboxrr/laravel-auth`, debes publicar el archivo de configuración del paquete. Para hacer esto, utiliza el comando Artisan `vendor:publish`.
