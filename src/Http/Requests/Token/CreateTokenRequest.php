@@ -32,7 +32,7 @@ class CreateTokenRequest extends FormRequest
         $abilities = ($this->abilities) ? $this->abilities : ['*'];
 
 
-        $token = $this->user()->createToken($this->name, $this->input('abilities'));
+        $token = $this->user()->createToken($this->name, $abilities);
 
         if ($this->expires_at) {
 
