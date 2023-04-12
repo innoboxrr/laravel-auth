@@ -32,6 +32,10 @@ Route::get(config('laravel-auth.routes.uris.email-verification'), 'Authenticatio
 	->middleware(config('laravel-auth.routes.middlewares.email-verification'))
 	->name(config('laravel-auth.routes.names.email-verification'));
 
+Route::get(config('laravel-auth.routes.uris.get-auth'), 'AuthenticationController@getAuth')
+	->middleware(config('laravel-auth.routes.middlewares.get-auth'))
+	->name(config('laravel-auth.routes.names.get-auth'));
+
 // TOKEN
 
 Route::post(config('laravel-auth.routes.uris.create-token'), 'TokenController@createToken')

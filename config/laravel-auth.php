@@ -34,13 +34,15 @@ return [
 
 			'email-verification' => 'email-verification',
 
+			'get-auth' => 'get-auth',
+
 			'create-token' => 'create-token',
 
 			'tokens' => 'tokens',
 
 			'revoke-token' => 'revoke-token',
 
-			'flush-tokens' => 'flush-tokens'
+			'flush-tokens' => 'flush-tokens',
 
 		],
 
@@ -60,13 +62,15 @@ return [
 
 			'email-verification' => 'email-verification',
 
+			'get-auth' => 'get-auth',
+
 			'create-token' => 'create-token',
 
 			'tokens' => 'tokens',
 
 			'revoke-token' => 'revoke-token',
 
-			'flush-tokens' => 'flush-tokens'
+			'flush-tokens' => 'flush-tokens',
 
 		],
 
@@ -85,6 +89,8 @@ return [
 			'email-verification-notification' => ['auth:sanctum', 'throttle:6,1'],
 
 			'email-verification' => ['auth:sanctum', 'signed', 'throttle:6,1'],
+
+			'get-auth' => ['auth:sanctum'],
 
 			'create-token' => ['auth:sanctum'],
 
@@ -112,13 +118,15 @@ return [
 
 			'email-verification-notification' => '/home',
 
+			'get-auth' => '/home',
+
 			'create-token' => '/tokens',
 
 			'tokens' => '/tokens',
 
 			'revoke-token' => '/tokens',
 
-			'flush-tokens' => '/tokens'
+			'flush-tokens' => '/tokens',
 
 		],
 
