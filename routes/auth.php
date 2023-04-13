@@ -29,6 +29,7 @@ Route::post(config('laravel-auth.routes.uris.email-verification-notification'), 
 	->name(config('laravel-auth.routes.names.email-verification-notification'));
 
 // PENDIENTE: Verificar que MustVerifyEmail esté implementado en el modelo User
+	// Creo que esto debe ser reemplazado por: 'verification.verify'
 Route::get(config('laravel-auth.routes.uris.email-verification'), 'AuthenticationController@emailVerification')
 	->middleware(config('laravel-auth.routes.middlewares.email-verification'))
 	->name(config('laravel-auth.routes.names.email-verification'));
