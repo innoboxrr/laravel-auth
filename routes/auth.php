@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 // AUTH
 
@@ -39,7 +40,7 @@ Route::get(config('laravel-auth.routes.uris.get-auth'), 'AuthenticationControlle
 	->name(config('laravel-auth.routes.names.get-auth'));
 
 // PENDIENTE: Refactorizar este código.
-Route::get('/email/verify/{id}/{hash}', function (\Illuminate\Foundation\Auth\EmailVerificationRequest $request) {
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
 
 	    $request->fulfill();
 	 
