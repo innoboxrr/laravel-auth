@@ -28,6 +28,7 @@ Route::post(config('laravel-auth.routes.uris.email-verification-notification'), 
 	->middleware(config('laravel-auth.routes.middlewares.email-verification-notification'))
 	->name(config('laravel-auth.routes.names.email-verification-notification'));
 
+// PENDIENTE: Verificar que MustVerifyEmail esté implementado en el modelo User
 Route::get(config('laravel-auth.routes.uris.email-verification'), 'AuthenticationController@emailVerification')
 	->middleware(config('laravel-auth.routes.middlewares.email-verification'))
 	->name(config('laravel-auth.routes.names.email-verification'));
@@ -35,6 +36,17 @@ Route::get(config('laravel-auth.routes.uris.email-verification'), 'Authenticatio
 Route::get(config('laravel-auth.routes.uris.get-auth'), 'AuthenticationController@getAuth')
 	->middleware(config('laravel-auth.routes.middlewares.get-auth'))
 	->name(config('laravel-auth.routes.names.get-auth'));
+
+// PENDIENTE: Refactorizar este código.
+Route::get('/email/verify/{id}/{hash}', function (\Illuminate\Foundation\Auth\EmailVerificationRequest $request) {
+
+	    $request->fulfill();
+	 
+	    return redirect('/');
+
+	})
+	->middleware(['auth', 'signed'])
+	->name('verification.verify');
 
 // TOKEN
 
