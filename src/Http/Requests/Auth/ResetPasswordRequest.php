@@ -5,7 +5,7 @@ namespace Innoboxrr\LaravelAuth\Http\Requests\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
-use Innoboxrr\LaravelAuth\Rules\SeccurePassword;
+use Innoboxrr\LaravelAuth\Rules\SecurePassword;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -28,7 +28,7 @@ class ResetPasswordRequest extends FormRequest
 
             'email' => ['required', 'email'],
 
-            'password' => ['required', 'confirmed', new SeccurePassword],
+            'password' => ['required', 'confirmed', new SecurePassword],
 
         ];
 
