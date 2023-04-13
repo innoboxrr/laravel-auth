@@ -24,11 +24,21 @@ Route::post(config('laravel-auth.routes.uris.reset-password'), 'AuthenticationCo
 	->middleware(config('laravel-auth.routes.middlewares.reset-password'))
 	->name(config('laravel-auth.routes.names.reset-password'));
 
+// PENDIENTE: Refactorizar este código.
+Route::get('password-reset', function () {
+	 
+	    return redirect('/reset-password');
+
+	})
+	->middleware(['guest'])
+	->name('password.reset');
+
 Route::post(config('laravel-auth.routes.uris.email-verification-notification'), 'AuthenticationController@emailVerificationNotification')
 	->middleware(config('laravel-auth.routes.middlewares.email-verification-notification'))
 	->name(config('laravel-auth.routes.names.email-verification-notification'));
 
 // PENDIENTE: Verificar que MustVerifyEmail esté implementado en el modelo User
+	// Creo que esto debe ser reemplazado por: 'verification.verify'
 Route::get(config('laravel-auth.routes.uris.email-verification'), 'AuthenticationController@emailVerification')
 	->middleware(config('laravel-auth.routes.middlewares.email-verification'))
 	->name(config('laravel-auth.routes.names.email-verification'));
