@@ -29,7 +29,8 @@
             "providers": [
                 "Innoboxrr\\LaravelAuth\\Providers\\LaravelAuthServiceProvider",
                 "Innoboxrr\\LaravelAuth\\Providers\\RouteServiceProvider",
-                "Innoboxrr\\LaravelAuth\\Providers\\EmailVerificationServiceProvider"
+                "Innoboxrr\\LaravelAuth\\Providers\\EmailVerificationServiceProvider",
+                "Innoboxrr\\LaravelAuth\\Providers\\ResetPasswordServiceProvider"
             ]
         }
     },
