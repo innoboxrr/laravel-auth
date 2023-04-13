@@ -24,11 +24,7 @@ class ResetPasswordServiceProvider extends ServiceProvider
         
         ResetPassword::createUrlUsing(function($notifiable, $token) {
 
-            // PENDIENTE: Mandar la URI a config
-            return url('reset-password', [
-                        'token' => $token,
-                        'email' => $notifiable->getEmailForPasswordReset(),
-                    ]);
+            return url("auth/reset-password/{$token}/{$notifiable->getEmailForPasswordReset()}");
 
         });
         
