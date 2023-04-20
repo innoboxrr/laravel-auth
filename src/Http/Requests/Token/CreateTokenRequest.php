@@ -30,7 +30,7 @@ class CreateTokenRequest extends FormRequest
     public function handle()
     {
 
-         $credentials = $request->validate([
+         $credentials = $this->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
