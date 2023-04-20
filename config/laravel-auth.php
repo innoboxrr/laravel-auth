@@ -92,7 +92,7 @@ return [
 
 			'get-auth' => ['auth:sanctum'],
 
-			'create-token' => ['auth:sanctum'],
+			'create-token' => [],
 
 			'tokens' => ['auth:sanctum'],
 
