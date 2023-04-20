@@ -3,6 +3,7 @@
 namespace Innoboxrr\LaravelAuth\Http\Requests\Token;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class CreateTokenRequest extends FormRequest
@@ -29,20 +30,32 @@ class CreateTokenRequest extends FormRequest
     public function handle()
     {
 
-        $abilities = ($this->abilities) ? $this->abilities : ['*'];
+         $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
 
+        if (Auth::attempt($credentials)) {
 
-        $token = $this->user()->createToken($this->name, $abilities);
+            $userClass = app(config('laravel-auth.user-class', 'App\\Models\\User'));
 
-        if ($this->expires_at) {
+            $user = $userClass::where('email', $this->email)->firstOrFail();
+            
+            $abilities = ($this->abilities) ? $this->abilities : ['*'];
 
-            $token->token->expires_at = Carbon::parse($this->expires_at);
+            $token = $user->createToken($this->name, $abilities);
 
-            $token->token->save();
+            if ($this->expires_at) {
+
+                $token->token->expires_at = Carbon::parse($this->expires_at);
+
+                $token->token->save();
+
+            }
+
+            return $this->getResponse($token->plainTextToken);
 
         }
-
-        return $this->getResponse($token->plainTextToken);
 
     }
 
