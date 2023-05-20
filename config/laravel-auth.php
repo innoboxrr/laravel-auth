@@ -32,7 +32,7 @@ return [
 
 			'email-verification-notification' => 'email-verification-notification',
 
-			'email-verification' => 'email-verification',
+			'verification-verify' => 'email/verify/{id}/{hash}',
 
 			'get-auth' => 'get-auth',
 
@@ -54,23 +54,23 @@ return [
 
 			'logout' => 'logout',
 
-			'forgot-password' => 'forgot-password',
+			'forgot.password' => 'forgot.password',
 
-			'reset-password' => 'reset-password',
+			'reset.password' => 'reset.password',
 
-			'email-verification-notification' => 'email-verification-notification',
+			'email.verification.notification' => 'email.verification.notification',
 
-			'email-verification' => 'email-verification',
+			'verification.verify' => 'verification.verify',
 
-			'get-auth' => 'get-auth',
+			'get.auth' => 'get.auth',
 
-			'create-token' => 'create-token',
+			'create.token' => 'create.token',
 
 			'tokens' => 'tokens',
 
-			'revoke-token' => 'revoke-token',
+			'revoke.token' => 'revoke.token',
 
-			'flush-tokens' => 'flush-tokens',
+			'flush.tokens' => 'flush.tokens',
 
 		],
 
@@ -88,7 +88,7 @@ return [
 
 			'email-verification-notification' => ['auth:sanctum', 'throttle:6,1'],
 
-			'email-verification' => ['auth:sanctum', 'signed', 'throttle:6,1'],
+			'verification-verify' => ['auth:sanctum', 'signed', 'throttle:6,1'],
 
 			'get-auth' => ['auth:sanctum'],
 
@@ -117,6 +117,8 @@ return [
 			'reset-password' => '/login', // Ruta de autenticación
 
 			'email-verification-notification' => '/home',
+
+			'verification.verify' => '/home',
 
 			'get-auth' => '/home',
 

@@ -17,22 +17,9 @@ class EmailVerificationNotificationRequest extends FormRequest
 
     public function rules()
     {
+    
         return [];
-    }
-
-    public function handle()
-    {
-
-        if ($this->user()->hasVerifiedEmail()) {
-
-            return $this->getResponse(true);
-
-        }
-
-        $this->user()->sendEmailVerificationNotification();
-
-        return $this->getResponse('verification-link-sent');
-
+    
     }
 
     public function getResponse($status)
@@ -47,6 +34,21 @@ class EmailVerificationNotificationRequest extends FormRequest
             return redirect(config('laravel-auth.routes.redirects.email-verification-notification'));
 
         }
+
+    }
+    
+    public function handle()
+    {
+
+        if ($this->user()->hasVerifiedEmail()) {
+
+            return $this->getResponse(true);
+
+        }
+
+        $this->user()->sendEmailVerificationNotification();
+
+        return $this->getResponse('verification-link-sent');
 
     }
     

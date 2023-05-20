@@ -19,42 +19,29 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 	Route::post(config('laravel-auth.routes.uris.forgot-password'), 'AuthenticationController@forgotPassword')
 		->middleware(config('laravel-auth.routes.middlewares.forgot-password'))
-		->name(config('laravel-auth.routes.names.forgot-password'));
+		->name(config('laravel-auth.routes.names.forgot.password'));
 
 	Route::post(config('laravel-auth.routes.uris.reset-password'), 'AuthenticationController@resetPassword')
 		->middleware(config('laravel-auth.routes.middlewares.reset-password'))
-		->name(config('laravel-auth.routes.names.reset-password'));
+		->name(config('laravel-auth.routes.names.reset.password'));
 
 	Route::post(config('laravel-auth.routes.uris.email-verification-notification'), 'AuthenticationController@emailVerificationNotification')
 		->middleware(config('laravel-auth.routes.middlewares.email-verification-notification'))
-		->name(config('laravel-auth.routes.names.email-verification-notification'));
-
-	// PENDIENTE: Verificar que MustVerifyEmail esté implementado en el modelo User
-		// Creo que esto debe ser reemplazado por: 'verification.verify'
-	Route::get(config('laravel-auth.routes.uris.email-verification'), 'AuthenticationController@emailVerification')
-		->middleware(config('laravel-auth.routes.middlewares.email-verification'))
-		->name(config('laravel-auth.routes.names.email-verification'));
+		->name(config('laravel-auth.routes.names.email.verification.notification'));
 
 	Route::get(config('laravel-auth.routes.uris.get-auth'), 'AuthenticationController@getAuth')
 		->middleware(config('laravel-auth.routes.middlewares.get-auth'))
-		->name(config('laravel-auth.routes.names.get-auth'));
+		->name(config('laravel-auth.routes.names.get.auth'));
 
-	// PENDIENTE: Refactorizar este código.
-	Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-
-		    $request->fulfill();
-		 
-		    return redirect('/');
-
-		})
-		->middleware(['auth', 'signed'])
-		->name('verification.verify');
+	Route::get(config('laravel-auth.routes.uris.verification-verify'), 'AuthenticationController@verificationVerify')
+		->middleware(config('laravel-auth.routes.middlewares.verification-verify'))
+		->name(config('laravel-auth.routes.names.verification.verify'));
 
 // TOKEN
 
 	Route::post(config('laravel-auth.routes.uris.create-token'), 'TokenController@createToken')
 		->middleware(config('laravel-auth.routes.middlewares.create-token'))
-		->name(config('laravel-auth.routes.names.create-token'));
+		->name(config('laravel-auth.routes.names.create.token'));
 
 	Route::post(config('laravel-auth.routes.uris.tokens'), 'TokenController@tokens')
 		->middleware(config('laravel-auth.routes.middlewares.tokens'))
@@ -62,8 +49,8 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 	Route::post(config('laravel-auth.routes.uris.revoke-token'), 'TokenController@revokeToken')
 		->middleware(config('laravel-auth.routes.middlewares.revoke-token'))
-		->name(config('laravel-auth.routes.names.revoke-token'));
+		->name(config('laravel-auth.routes.names.revoke.token'));
 
 	Route::post(config('laravel-auth.routes.uris.flush-tokens'), 'TokenController@flushTokens')
 		->middleware(config('laravel-auth.routes.middlewares.flush-tokens'))
-		->name(config('laravel-auth.routes.names.flush-tokens'));
+		->name(config('laravel-auth.routes.names.flush.tokens'));

@@ -37,11 +37,24 @@ class RegisterRequest extends FormRequest
     {
 
         $this->merge([
+            
             'password' => Hash::make($this->password)
+
         ]);
 
     }
 
+    protected function resolveUserInstance()
+    {
+
+        $userClass = config('laravel-auth.user-class');
+
+        $userClass = app($userClass);
+
+        return new $userClass();
+
+    }
+    
     public function handle()
     {
 
@@ -54,17 +67,6 @@ class RegisterRequest extends FormRequest
         return $this->wantsJson()
             ? response()->json(['success' => true])
             : redirect(config('laravel-auth.routes.redirects.register'));
-
-    }
-
-    protected function resolveUserInstance()
-    {
-
-        $userClass = config('laravel-auth.user-class');
-
-        $userClass = app($userClass);
-
-        return new $userClass();
 
     }
     
