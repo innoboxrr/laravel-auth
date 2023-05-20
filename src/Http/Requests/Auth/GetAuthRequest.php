@@ -17,13 +17,6 @@ class GetAuthRequest extends FormRequest
         return [];
     }
 
-    public function handle()
-    {
-
-        return $this->getResponse();
-
-    }
-
     public function getResponse()
     {
 
@@ -40,6 +33,13 @@ class GetAuthRequest extends FormRequest
 
         }
     
+    }
+    
+    public function handle()
+    {
+
+        return $this->getResponse();
+
     }
 
 }

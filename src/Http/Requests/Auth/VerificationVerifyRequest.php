@@ -6,15 +6,24 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest as VerificationRequest;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Verified;
 
-class EmailVerificationRequest extends VerificationRequest
+class VerificationVerifyRequest extends VerificationRequest
 {
+
+    public function getResponse($status)
+    {
+
+        return $this->wantsJson()
+            ? response()->json(['verified' => $status])
+            : redirect(config('laravel-auth.routes.redirects.login'));
+
+    }
 
     public function handle()
     {
 
         if ($this->user()->hasVerifiedEmail()) {
         
-            return $this->getResponse();
+            return $this->getResponse(true);
 
         }
 
@@ -22,26 +31,11 @@ class EmailVerificationRequest extends VerificationRequest
             
             event(new Verified($this->user()));
 
-        }
-
-        return $this->getResponse();
-
-    }
-
-    public function getResponse()
-    {
-
-        if($this->wantsJson()) {
-
-            return response()->json(['verified' => true]);
-            
-        } else {
-
-            return redirect()->intended(
-                config('app.frontend_url').RouteServiceProvider::HOME.'?verified=1'
-            );
+            return $this->getResponse(true);
 
         }
+
+        return $this->getResponse(false);
 
     }
     
