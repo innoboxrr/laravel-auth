@@ -99,3 +99,27 @@ De manera general el listado de funciones que ofrece el paquete actualmente son:
 - Ruta `POST` para **revocar todos los tokens** de un usuario identificado
 - Ruta `GET` para **login o registro con redes sociales**
 - Ruta `GET` para **confirmar el login con redes sociales**
+
+## Socialite
+
+El paquete viene configurado para el acceso con redes sociales mediente el paquete de Socialite. 
+Para añadir los provedores de servicio de Socialite, debe modificar el archivo de configuración de services
+
+```php
+
+<?php
+
+return [
+
+    // ...
+
+    'google' => [
+        'client_id' => '125739176818-crrssv3nf9ojsanmasdsldef1t5oaoto.apps.googleusercontent.com',
+        'client_secret' => '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',
+        'redirect' => '/auth/social/google/callback',
+    ]
+
+];
+
+
+```
