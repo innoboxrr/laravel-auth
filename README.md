@@ -1,147 +1,91 @@
-# Sistema de autenticación alternativo para Laravel
+# Laravel Auth Package
 
-Este es un sistema de autenticación alternativo para Laravel que provee rutas seguras para la autenticación y gestión de tokens.
+## Comenzando 🚀
 
-## Instalación y Publicación de Archivo de Configuración de `innoboxrr/laravel-auth`
+El paquete innoboxrr/laravel-auth nace ante la demanda de un sistema de autenticación completo y centralizado que se adapte a cualquier tipo de aplicación, ya sea una web convencional, una SPA o una APIRestful.
 
-El paquete `innoboxrr/laravel-auth` es un paquete de autenticación alternativo para Laravel. Este paquete incluye rutas seguras para la autenticación y gestión de tokens.
+Nuestra ambición es que, a medida que el paquete evolucione, se consolide como una alternativa unificada y accesible, sin que su implementación requiera cambios significativos en la estructura de un proyecto existente. Además, estamos comprometidos con el desarrollo de estrategias de autenticación innovadoras y vanguardistas.
 
-Aquí se describe cómo instalar y publicar el archivo de configuración de `innoboxrr/laravel-auth` utilizando Artisan.
+El paquete de Laravel Auth se destaca por su alto nivel de personalización. La implementación de Closures o funciones anónimas permite a los desarrolladores adaptar cada parte del código a sus necesidades específicas. Además, incluye un archivo de configuración con opciones para personalizar aún más su comportamiento.
 
-### Instalación
+¿Por qué elegir innoboxrr/laravel-auth en lugar de las soluciones de autenticación que Laravel ofrece actualmente? La respuesta es sencilla: flexibilidad y desacoplamiento. Este paquete ha sido diseñado para integrarse sin problemas con cualquier estructura de proyecto, minimizando los posibles conflictos.
 
-Para instalar el paquete `innoboxrr/laravel-auth`, utiliza Composer. Abre una terminal en la carpeta raíz de tu proyecto y ejecuta el siguiente comando:
+En términos de seguridad, el paquete innoboxrr/laravel-auth adopta los mismos sistemas que Laravel recomienda y proporciona, pero de una manera unificada y armónica. Esto significa que puedes centrarte en desarrollar tu aplicación sin tener que preocuparte por cada aspecto de la implementación de la seguridad. Nuestro paquete se encarga de ello, dándote la tranquilidad de que tu aplicación está protegida.
 
-`composer require innoboxrr/laravel-auth`
+## Pre-requisitos 📋
 
-Una vez que hayas ejecutado este comando, Composer instalará el paquete en tu proyecto y actualizará el archivo `composer.json` de tu proyecto.
+### Requisitos del sistema:
+- PHP 8.1 o superior
+- Composer
 
-Si deseas escapar la protección por CSRF modifica el middleware **VerifyCsrfToken**:
+### Dependencias
+- "laravel/sanctum": "^3.2",
+- "laravel/socialite": "^5.6"
 
-``` php
-<?php
+## Instalación 🔧
 
-namespace App\Http\Middleware;
+Pasos para la instalación del proyecto.
 
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as Middleware;
+Para instalar el paquete solo debe ejecutar 
 
-class VerifyCsrfToken extends Middleware
-{ 
-    protected $except = [
-        'auth/*'
-    ];
-}
-```
+``composer require innoboxrr/laravel-auth``
 
-### Publicación del archivo de configuración
+## Ejecutando las pruebas ⚙️
 
-Para personalizar la configuración de `innoboxrr/laravel-auth`, debes publicar el archivo de configuración del paquete. Para hacer esto, utiliza el comando Artisan `vendor:publish`.
-
-Abre una terminal en la carpeta raíz de tu proyecto y ejecuta el siguiente comando:
-
-`php artisan vendor:publish --provider="Innoboxrr\LaravelAuth\Providers\LaravelAuthServiceProvider" --tag=config`
+... En construcción
 
 
-Este comando publicará el archivo de configuración `config/laravel-auth.php` en la carpeta `config` de tu proyecto.
+## Construido con 🛠️
 
-Puedes editar este archivo para personalizar la configuración de `innoboxrr/laravel-auth`.
+Lista de tecnologías y herramientas utilizadas en el proyecto:
+- PHP
+- Laravel 10
+- Composer
 
-### Uso
+## Contributing 🖇️
 
-Para utilizar `innoboxrr/laravel-auth` en tu proyecto Laravel, debes registrar los Service Providers `LaravelAuthServiceProvider` y `RouteServiceProvider` en tu aplicación.
+Si desea colaborar dar sugerencias o reportar alguna falla en el código lo puede hacer a través de los issues de GitHub en: [https://github.com/innoboxrr/laravel-auth/issues](https://github.com/innoboxrr/laravel-auth/issues)
 
-Abre el archivo `config/app.php` de tu proyecto y agrega las siguientes líneas en la sección `providers`:
+## Versionado 📌
 
-`'providers' => [
-// ...
-Innoboxrr\LaravelAuth\Providers\LaravelAuthServiceProvider::class,
-Innoboxrr\LaravelAuth\Providers\RouteServiceProvider::class,
-],`
+El proyecto emplea un sistema de versionadao SemVer que le permite identificar la corrección de errores, la implementación de nuevas características así como actualizaciones mayores. En estos casos le proporcionaremos información detallada para realizar las actualizaciones correspondientes.
 
+## Autores ✒️
 
-Una vez que hayas registrado estos Service Providers, puedes utilizar las rutas y funciones de autenticación proporcionadas por `innoboxrr/laravel-auth` en tu aplicación Laravel.
+Lista de los autores del proyecto.
+ - Homero Raul Vargas Cruz
 
+## Licencia 📄
 
-## Rutas de autenticación
+Este paquete se encuentra bajo la licencia MIT. Esto significa que puedes usarlo de manera gratuita para cualquier propósito, incluso para propósitos comerciales. No obstante, hay algunas condiciones que debes tener en cuenta.
 
-### Inicio de sesión
-POST /login
-Esta ruta es utilizada para autenticar a un usuario.
+La licencia MIT te concede el derecho de usar, copiar, modificar, fusionar, publicar, distribuir, sublicenciar y/o vender copias del software. Sin embargo, en todos estos casos, debes proporcionar una copia del aviso de la licencia y el aviso de derechos de autor en todas las copias o partes sustanciales del software.
 
-### Registro
-POST /register
-Esta ruta es utilizada para registrar a un nuevo usuario.
+El software se proporciona "tal cual", sin garantía de ningún tipo, expresa o implícita, incluyendo pero no limitado a las garantías de comerciabilidad, aptitud para un propósito particular y no infracción. En ningún caso, los autores o los titulares de los derechos de autor serán responsables de cualquier reclamación, daños u otras responsabilidades, ya sea en una acción de contrato, agravio o de otro modo, que surjan de, estén en conexión con el software o el uso u otras operaciones en el software.
 
-### Cierre de sesión
-POST /logout
-Esta ruta es utilizada para cerrar la sesión de un usuario.
+Para ver la licencia completa, por favor visita el archivo LICENSE incluido en este paquete o haz [click aquí](https://opensource.org/licenses/MIT) para verla en la página oficial de la licencia MIT en Open Source Initiative.
 
-### Olvido de contraseña
-POST /forgot-password
-Esta ruta es utilizada para iniciar el proceso de recuperación de contraseña.
+## Expresiones de Gratitud 🎁
 
-### Restablecimiento de contraseña
-POST /reset-password
-Esta ruta es utilizada para restablecer la contraseña de un usuario.
+Como en todos mis proyectos agradezco a mis padres, hermanos, esposa e hijos quienes son mi inspiración mi motor y razón de dar cada día siempre lo mejor de mi.
 
-### Notificación de verificación de correo electrónico
-POST /email-verification-notification
-Esta ruta es utilizada para enviar notificaciones de verificación de correo electrónico.
+⌨️ con ❤️ por Homero Raul Vargas Cruz 😊
 
-### Verificación de correo electrónico
-GET /email-verification
-Esta ruta es utilizada para verificar el correo electrónico de un usuario.
+## Notas para el desarrollador
 
-## Rutas de tokens
-### Crear token
-POST /create-token
-Esta ruta es utilizada para crear un nuevo token para un usuario.
+De manera general el listado de funciones que ofrece el paquete actualmente son:
 
-### Tokens
-POST /tokens
-Esta ruta es utilizada para obtener todos los tokens asociados a un usuario.
-
-### Revocar token
-POST /revoke-token
-Esta ruta es utilizada para revocar el token de un usuario.
-
-### Vaciar tokens
-POST /flush-tokens
-Esta ruta es utilizada para revocar todos los tokens de un usuario.
-
-# RouteServiceProvider
-
-El Service Provider `RouteServiceProvider` es responsable de mapear las rutas de autenticación. Esto incluye la carga de las rutas definidas en los archivos de rutas de la aplicación y la configuración de los parámetros de ruta.
-
-## Funciones principales
-
-### map()
-
-El método `map()` es el método principal del Service Provider `RouteServiceProvider`. Este método es llamado automáticamente por Laravel cuando el Service Provider es registrado en la aplicación.
-
-Dentro de este método, se deben registrar todas las rutas de la aplicación.
-
-### mapAuthRoutes()
-
-El método `mapAuthRoutes()` es un ejemplo de cómo se pueden registrar las rutas de autenticación de la aplicación.
-
-En este ejemplo, el método `mapAuthRoutes()` registra las rutas de autenticación definidas en el archivo `routes/auth.php` utilizando el middleware `web`.
-
-Además, este método utiliza la configuración definida en el archivo `config/laravel-auth.php` para establecer el prefijo y el namespace de las rutas.
-
-También en este archivo de configuración se encuentra la opción `route.active`, que define si las rutas deben ser cargadas dentro de la aplicación.
-
-## Uso
-
-Para versiones anteriores de Laravel 5.5 y para utilizar el Service Provider `RouteServiceProvider`, debes registrarlo en tu aplicación. Esto se hace en el archivo `config/app.php`.
-
-Asegúrate de que la clase `RouteServiceProvider` esté registrada en la sección `providers` del archivo `config/app.php`:
-
-`
-'providers' => [
-// ...
-Innoboxrr\LaravelAuth\Providers\RouteServiceProvider::class,
-],
-`
-
-Una vez que hayas registrado el Service Provider, las rutas definidas en los archivos de rutas de la aplicación serán cargadas automáticamente.
+- Ruta `POST` para **registrar** al usuario
+- Ruta `POST` para **autenticar** al usuario
+- Ruta `POST` para **cerrar sesión** del usuario
+- Ruta `POST` para **enviar enlace de recuperación de cuenta** para restablecer la cuenta
+- Ruta `POST` para **restablecer la cuenta del usuario** mediente un hash de verificación.
+- Ruta `POST` para **mandar email de verificación** 
+- Ruta `POST` para **recuperar el usuario actualmente identificado**
+- Ruta `GET` para **verificar el correo** después de que el usuario ha dado clic en el correo de verificación.
+- Ruta `POST` para **crear un token de acceso**. Esto es util para identificaciones via API
+- Ruta `POST` para **recuperar los tokens** de un usuario actualmente identificado
+- Ruta `POST` para **revocar un token** especifico de un usuario
+- Ruta `POST` para **revocar todos los tokens** de un usuario identificado
+- Ruta `GET` para **login o registro con redes sociales**
+- Ruta `GET` para **confirmar el login con redes sociales**

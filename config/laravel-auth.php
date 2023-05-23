@@ -32,9 +32,9 @@ return [
 
 			'email-verification-notification' => 'email-verification-notification',
 
-			'verification-verify' => 'email/verify/{id}/{hash}',
-
 			'get-auth' => 'get-auth',
+			
+			'verification-verify' => 'email/verify/{id}/{hash}',
 
 			'create-token' => 'create-token',
 
@@ -43,6 +43,10 @@ return [
 			'revoke-token' => 'revoke-token',
 
 			'flush-tokens' => 'flush-tokens',
+
+			'socialite-redirect' => 'social/{provider}/redirect',
+
+			'socialite-callback' => 'social/{provider}/callback',
 
 		],
 
@@ -54,23 +58,27 @@ return [
 
 			'logout' => 'logout',
 
-			'forgot.password' => 'forgot.password',
+			'forgot-password' => 'forgot.password',
 
-			'reset.password' => 'reset.password',
+			'reset-password' => 'reset.password',
 
-			'email.verification.notification' => 'email.verification.notification',
+			'email-verification-notification' => 'email.verification.notification',
 
-			'verification.verify' => 'verification.verify',
+			'verification-verify' => 'verification.verify',
 
-			'get.auth' => 'get.auth',
+			'get-auth' => 'get.auth',
 
-			'create.token' => 'create.token',
+			'create-token' => 'create.token',
 
 			'tokens' => 'tokens',
 
-			'revoke.token' => 'revoke.token',
+			'revoke-token' => 'revoke.token',
 
-			'flush.tokens' => 'flush.tokens',
+			'flush-tokens' => 'flush.tokens',
+
+			'socialite-redirect' => 'socialite.redirect',
+
+			'socialite-callback' => 'socialite.callback'
 
 		],
 
@@ -99,6 +107,10 @@ return [
 			'revoke-token' => ['auth:sanctum'],
 
 			'flush-tokens' => ['auth:sanctum'],
+
+			'socialite-redirect' => ['guest'],
+
+			'socialite-callback' => ['guest'],
 
 		],
 
@@ -129,6 +141,10 @@ return [
 			'revoke-token' => '/tokens',
 
 			'flush-tokens' => '/tokens',
+
+			'socialite-redirect' => '/', // Esto lo determina Socialite
+
+			'socialite-callback' => '/',
 
 		],
 
