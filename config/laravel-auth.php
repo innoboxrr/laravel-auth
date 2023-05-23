@@ -44,9 +44,9 @@ return [
 
 			'flush-tokens' => 'flush-tokens',
 
-			'socialite-redirect' => 'socialite/{provider}/redirect',
+			'socialite-redirect' => 'social/{provider}/redirect',
 
-			'socialite-callback' => 'socialite/{provider}/callback',
+			'socialite-callback' => 'social/{provider}/callback',
 
 		],
 

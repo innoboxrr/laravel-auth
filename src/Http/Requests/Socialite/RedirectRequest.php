@@ -26,9 +26,10 @@ class RedirectRequest extends FormRequest
     public function handle()
     {
 
-        return Socialite::driver($this->driver)
-            ->with(['action' => $this->action])
+        $response = Socialite::driver($this->provider)
             ->redirect();
+
+        return $response;
 
     }
     

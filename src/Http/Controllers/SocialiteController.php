@@ -8,12 +8,12 @@ use Innoboxrr\LaravelAuth\Http\Requests\Socialite\CallbackRequest;
 class SocialiteController extends Controller
 {
     
-    public function createToken(RedirectRequest $request)
+    public function redirect(RedirectRequest $request)
     {
         return $request->handle();
     }
 
-    public function tokens(CallbackRequest $request)
+    public function callback(CallbackRequest $request)
     {
         return $request->handle();
     }
