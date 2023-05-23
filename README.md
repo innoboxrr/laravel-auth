@@ -1,5 +1,15 @@
 # Laravel Auth Package
 
+## Apoya Nuestro Trabajo 🙌
+
+Desarrollamos estos paquetes de software de manera gratuita con la intención de contribuir a la comunidad de Laravel y facilitar la vida de los desarrolladores. Nos apasiona compartir lo que hemos aprendido y ver cómo nuestros paquetes ayudan a las personas en sus proyectos.
+
+Sin embargo, también requerimos de apoyo para seguir creando y manteniendo estos recursos. Si estás en la posición de poder hacerlo, te invitamos a inscribirte a uno de nuestros cursos de pago. No solo estarías apoyando nuestro trabajo, sino que también podrías adquirir nuevas habilidades y conocimientos.
+
+En particular, te recomendamos nuestro curso [Desarrollo de paquetes en Laravel para mejorar tu productividad](https://laravelers.com/course/275). Este curso está diseñado para enseñarte a desarrollar tus propios paquetes de Laravel y PHP. Al inscribirte, no solo estarás apoyando nuestro trabajo, sino que también estarás invirtiendo en tu propio crecimiento y desarrollo como programador.
+
+Gracias por considerar esta opción y por tu apoyo continuo a nuestra labor. ¡Apreciamos enormemente a nuestra comunidad!
+
 ## Comenzando 🚀
 
 El paquete innoboxrr/laravel-auth nace ante la demanda de un sistema de autenticación completo y centralizado que se adapte a cualquier tipo de aplicación, ya sea una web convencional, una SPA o una APIRestful.
