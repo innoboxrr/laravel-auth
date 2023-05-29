@@ -48,7 +48,7 @@ class CallbackRequest extends FormRequest
 
                 Auth::login($finduser);
      
-                return redirect('/dashboard');
+                return redirect(config('laravel-auth.routes.redirects.socialite-callback'));
       
             }else{
 
@@ -66,7 +66,7 @@ class CallbackRequest extends FormRequest
      
                 Auth::login($newUser);
       
-                return redirect('/dashboard');
+                return redirect(config('laravel-auth.routes.redirects.socialite-callback'));
             }
      
         } catch (Exception $e) {
