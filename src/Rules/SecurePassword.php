@@ -12,17 +12,17 @@ class SecurePassword implements ValidationRule
     {
 
         // Verifica si la contraseña está presente y tiene al menos 8 caracteres
-        if (empty($value) || strlen($value) < 8) {
+        if (empty($value) || strlen($value) < config('laravel-auth.password.length', 8)) {
             return false;
         }
 
         // Verifica si la contraseña contiene al menos una letra mayúscula
-        if (!preg_match('/[A-Z]/', $value)) {
+        if (!preg_match('/[A-Z]/', $value) && config('laravel-auth.password.uppercase')) {
             return false;
         }
 
         // Verifica si la contraseña contiene al menos un número
-        if (!preg_match('/[0-9]/', $value)) {
+        if (!preg_match('/[0-9]/', $value) && config('laravel-auth.password.number')) {
             return false;
         }
 
