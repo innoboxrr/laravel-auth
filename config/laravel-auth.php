@@ -148,6 +148,16 @@ return [
 
 		],
 
+		'password' => [
+
+			'length' => 8,
+
+			'uppercase' => false,
+
+			'number' => false,
+
+		]
+
 	],
 
 ];

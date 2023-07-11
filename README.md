@@ -114,8 +114,8 @@ return [
     // ...
 
     'google' => [
-        'client_id' => '125739176818-crrssv3nf9ojsanmasdsldef1t5oaoto.apps.googleusercontent.com',
-        'client_secret' => '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',
+        'client_id' => 'ÇLIENT_ID',
+        'client_secret' => 'CLIEN_SECRET',
         'redirect' => '/auth/social/google/callback',
     ]
 
