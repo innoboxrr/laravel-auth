@@ -32,10 +32,14 @@ class ForgotPasswordRequest extends FormRequest
         $status = Password::sendResetLink($this->only('email'));
 
         if ($status == Password::RESET_LINK_SENT) {
+
+            $status = 'success';
         
             $message = __('Se ha enviado un enlace de restablecimiento de contraseña a su dirección de correo electrónico.');
         
         } else {
+
+            $status = 'error';
         
             $message = __('No pudimos encontrar un usuario con esa dirección de correo electrónico.');
         
@@ -43,11 +47,11 @@ class ForgotPasswordRequest extends FormRequest
 
         if ($this->wantsJson()) {
         
-            return response()->json(['message' => $message]);
+            return response()->json(['status' => $status, 'message' => $message]);
         
         } else {
         
-            return back()->with('status', $message);
+            return back()->with(['status' => $status, 'message' => $message]);
         
         }
 
