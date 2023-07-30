@@ -1,6 +1,5 @@
 {
     "name": "innoboxrr/laravel-auth",
-    "version": "3.0.3",
     "description": "Setup inicial para el proceso de autenticación con laravel",
     "type": "library",
     "license": "MIT",
