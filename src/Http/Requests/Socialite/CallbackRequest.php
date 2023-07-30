@@ -58,7 +58,7 @@ class CallbackRequest extends FormRequest
         
                 }
 
-                $newUser = User::create([
+                $newUser = $userModel::create([
                     'name' => $providerUser->name,
                     'email' => $providerUser->email,
                     'password' => bcrypt(substr(str_shuffle(str_repeat('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', 8)), 0, 8))
