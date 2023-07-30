@@ -5,6 +5,7 @@ namespace Innoboxrr\LaravelAuth\Http\Requests\Socialite;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Providers\RouteServiceProvider;
 use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Auth;
 
 class CallbackRequest extends FormRequest
 {
@@ -69,7 +70,7 @@ class CallbackRequest extends FormRequest
                 return redirect(config('laravel-auth.routes.redirects.socialite-callback'));
             }
      
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             
             abort(500);
 
