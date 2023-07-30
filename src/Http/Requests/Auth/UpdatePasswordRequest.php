@@ -4,7 +4,7 @@ namespace Innoboxrr\LaravelAuth\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Innoboxrr\LaravelAuth\Rules\SecurePassword;
-use Illuminate\Auth\Events\PasswordUpdated;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -49,7 +49,7 @@ class UpdatePasswordRequest extends FormRequest
             'password' => Hash::make($this->input('password')),
         ]);
 
-        event(new PasswordUpdated($user));
+        event(new PasswordReset($user));
 
         if ($this->wantsJson()) {
             
