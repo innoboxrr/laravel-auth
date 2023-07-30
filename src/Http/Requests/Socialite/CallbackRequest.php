@@ -48,8 +48,6 @@ class CallbackRequest extends FormRequest
                 }
 
                 Auth::login($finduser);
-      
-                $this->session()->regenerate();
 
                 return $this->wantsJson()
                     ? response()->json(['success' => true])
@@ -70,8 +68,6 @@ class CallbackRequest extends FormRequest
                 ]);
      
                 Auth::login($newUser);
-      
-                $this->session()->regenerate();
 
                 return $this->wantsJson()
                     ? response()->json(['success' => true])
