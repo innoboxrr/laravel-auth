@@ -57,7 +57,7 @@ class CallbackRequest extends FormRequest
 
                 if (static::$customRegisterCallback) {
         
-                    return call_user_func(static::$customRegisterCallback, $providerUser);
+                    return call_user_func(static::$customRegisterCallback, $providerUser, $this->provider);
         
                 }
 
