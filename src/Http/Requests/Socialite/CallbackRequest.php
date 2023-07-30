@@ -32,7 +32,7 @@ class CallbackRequest extends FormRequest
 
         try {
      
-            $providerUser = Socialite::driver($this->provider)->user();
+            $providerUser = Socialite::driver($this->provider)->stateless()->user();
 
             $userModel = app(config('laravel-auth.user-class'));
         
