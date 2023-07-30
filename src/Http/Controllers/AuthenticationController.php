@@ -7,6 +7,7 @@ use Innoboxrr\LaravelAuth\Http\Requests\Auth\RegisterRequest;
 use Innoboxrr\LaravelAuth\Http\Requests\Auth\LogoutRequest;
 use Innoboxrr\LaravelAuth\Http\Requests\Auth\ForgotPasswordRequest;
 use Innoboxrr\LaravelAuth\Http\Requests\Auth\ResetPasswordRequest;
+use Innoboxrr\LaravelAuth\Http\Requests\Auth\UpdatePasswordRequest;
 use Innoboxrr\LaravelAuth\Http\Requests\Auth\EmailVerificationNotificationRequest as EVNRequest;
 use Innoboxrr\LaravelAuth\Http\Requests\Auth\VerificationVerifyRequest;
 use Innoboxrr\LaravelAuth\Http\Requests\Auth\GetAuthRequest;
@@ -35,6 +36,11 @@ class AuthenticationController extends Controller
     }
 
     public function resetPassword(ResetPasswordRequest $request)
+    {
+        return $request->handle();
+    }
+
+    public function updatePassword(UpdatePasswordRequest $request)
     {
         return $request->handle();
     }

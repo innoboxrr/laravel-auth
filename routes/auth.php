@@ -25,6 +25,10 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 		->middleware(config('laravel-auth.routes.middlewares.reset-password'))
 		->name(config('laravel-auth.routes.names.reset-password'));
 
+	Route::post(config('laravel-auth.routes.uris.update-password'), 'AuthenticationController@updatePassword')
+		->middleware(config('laravel-auth.routes.middlewares.update-password'))
+		->name(config('laravel-auth.routes.names.update-password'));
+
 	Route::post(config('laravel-auth.routes.uris.email-verification-notification'), 'AuthenticationController@emailVerificationNotification')
 		->middleware(config('laravel-auth.routes.middlewares.email-verification-notification'))
 		->name(config('laravel-auth.routes.names.email-verification-notification'));

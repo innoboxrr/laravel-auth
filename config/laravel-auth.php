@@ -30,6 +30,8 @@ return [
 
 			'reset-password' => 'reset-password',
 
+			'update-password' => 'update-password',
+
 			'email-verification-notification' => 'email-verification-notification',
 
 			'get-auth' => 'get-auth',
@@ -62,6 +64,8 @@ return [
 
 			'reset-password' => 'reset.password',
 
+			'update-password' => 'update.password',
+
 			'email-verification-notification' => 'email.verification.notification',
 
 			'verification-verify' => 'verification.verify',
@@ -93,6 +97,8 @@ return [
 			'forgot-password' => ['guest'],
 
 			'reset-password' => ['guest'],
+
+			'update-password' => ['auth:sanctum'],
 
 			'email-verification-notification' => ['auth:sanctum', 'throttle:6,1'],
 
@@ -127,6 +133,8 @@ return [
 			'logout' => '/home',
 
 			'reset-password' => '/login', // Ruta de autenticación
+
+			'update-password' => '/home', // Ruta de autenticación
 
 			'email-verification-notification' => '/home',
 
