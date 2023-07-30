@@ -48,9 +48,13 @@ class CallbackRequest extends FormRequest
                 }
 
                 Auth::login($finduser);
-     
-                return redirect(config('laravel-auth.routes.redirects.socialite-callback'));
       
+                $this->session()->regenerate();
+
+                return $this->wantsJson()
+                    ? response()->json(['success' => true])
+                    : redirect(config('laravel-auth.routes.redirects.socialite-callback'));
+
             }else{
 
                 if (static::$customRegisterCallback) {
@@ -67,7 +71,12 @@ class CallbackRequest extends FormRequest
      
                 Auth::login($newUser);
       
-                return redirect(config('laravel-auth.routes.redirects.socialite-callback'));
+                $this->session()->regenerate();
+
+                return $this->wantsJson()
+                    ? response()->json(['success' => true])
+                    : redirect(config('laravel-auth.routes.redirects.socialite-callback'));
+                    
             }
      
         } catch (\Exception $e) {
