@@ -38,7 +38,7 @@ class GetAuthRequest extends FormRequest
     public function handle()
     {
 
-        if (static::$customLoginCallback) {
+        if (static::$customGetAuthCallback) {
         
             return call_user_func(static::$customGetAuthCallback, $this->user());
 
