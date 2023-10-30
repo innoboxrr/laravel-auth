@@ -7,6 +7,8 @@ use Illuminate\Foundation\Http\FormRequest;
 class GetAuthRequest extends FormRequest
 {
 
+    public static $customGetAuthCallback
+
     public function authorize()
     {
         return true;
@@ -19,7 +21,6 @@ class GetAuthRequest extends FormRequest
 
     public function getResponse()
     {
-
         if ($this->wantsJson()) {
 
             return response()->json([
@@ -32,14 +33,18 @@ class GetAuthRequest extends FormRequest
                 ->with('user', $this->user());
 
         }
-    
     }
     
     public function handle()
     {
 
-        return $this->getResponse();
+        if (static::$customLoginCallback) {
+        
+            return call_user_func(static::$customGetAuthCallback);
 
+        }
+
+        return $this->getResponse();
     }
 
 }
