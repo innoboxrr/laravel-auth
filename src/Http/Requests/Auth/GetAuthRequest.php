@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class GetAuthRequest extends FormRequest
 {
 
-    public static $customGetAuthCallback
+    public static $customGetAuthCallback;
 
     public function authorize()
     {
