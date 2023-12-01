@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 class RegisterRequest extends FormRequest
 {
 
-    public static $customRulesCallback;
+    protected static $customRulesCallback = null;
 
     public function authorize(): bool
     {
@@ -37,6 +37,11 @@ class RegisterRequest extends FormRequest
 
         ];
 
+    }
+
+    public static function setCustomRulesCallback(callable $callback)
+    {
+        static::$customRulesCallback = $callback;
     }
 
     protected function passedValidation()
