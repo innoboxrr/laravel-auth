@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Hash;
 class RegisterRequest extends FormRequest
 {
 
+    protected static $customRulesCallback;
+
     public function authorize(): bool
     {
 
@@ -20,6 +22,10 @@ class RegisterRequest extends FormRequest
 
     public function rules(): array
     {
+
+        if (static::$customRulesCallback) {
+            return call_user_func(static::$customRulesCallback, $this);
+        }
 
         return [
             
