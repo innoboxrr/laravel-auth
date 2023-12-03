@@ -104,7 +104,7 @@ return [
 
 			'verification-verify' => ['auth:sanctum', 'signed', 'throttle:6,1'],
 
-			'get-auth' => ['auth:sanctum'],
+			'get-auth' => [],
 
 			'create-token' => [],
 
