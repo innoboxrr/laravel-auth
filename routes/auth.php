@@ -72,14 +72,14 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 // Act As
 
-	Route::post(config('laravel-auth.routes.uris.impersonate'), 'AuthenticationController@impersonate')
+	Route::post(config('laravel-auth.routes.uris.impersonate'), 'ImpersonateController@impersonate')
 		->middleware(config('laravel-auth.routes.middlewares.impersonate'))
 		->name(config('laravel-auth.routes.names.impersonate'));
 	
-	Route::get(config('laravel-auth.routes.uris.impersonate-token'), 'AuthenticationController@impersonateToken')
+	Route::get(config('laravel-auth.routes.uris.impersonate-token'), 'ImpersonateController@impersonateToken')
 		->middleware(config('laravel-auth.routes.middlewares.impersonate-token'))
 		->name(config('laravel-auth.routes.names.impersonate-token'));
 
-	Route::get(config('laravel-auth.routes.uris.revert-impersonate'), 'AuthenticationController@revertImpersonate')
+	Route::get(config('laravel-auth.routes.uris.revert-impersonate'), 'ImpersonateController@revertImpersonate')
 		->middleware(config('laravel-auth.routes.middlewares.revert-impersonate'))
 		->name(config('laravel-auth.routes.names.revert-impersonate'));
