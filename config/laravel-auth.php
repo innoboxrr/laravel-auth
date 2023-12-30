@@ -94,7 +94,7 @@ return [
 
 			'impersonate' => 'impersonate',
 
-			'imperonate-token' => 'impersonate.token', 
+			'impersonate-token' => 'impersonate.token', 
 
 			'revert-impersonate' => 'revert.impersonate',
 
@@ -134,7 +134,7 @@ return [
 
 			'impersonate' => [],
 
-			'imperonate-token' => [],
+			'impersonate-token' => [],
 
 			'revert-impersonate' => [],
 
@@ -176,7 +176,7 @@ return [
 
 			'impersonate' => '/',
 
-			'imperonate-token' => '/',
+			'impersonate-token' => '/',
 
 			'revert-impersonate' => '/',
 
