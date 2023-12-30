@@ -64,7 +64,7 @@ class ImpersonateTokenRequest extends FormRequest
         Auth::loginUsingId($this->targetUserId);
         session()->put('impersonate_token', $this->token);
         $this->session()->regenerate();
-        return redirect(config('laravel-auth.routes.redirects.impersonate-token'))
+        return redirect(config('laravel-auth.routes.redirects.impersonate-token'));
     }
     
 }
