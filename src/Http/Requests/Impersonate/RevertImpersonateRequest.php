@@ -29,16 +29,13 @@ class RevertImpersonateRequest extends FormRequest
             if (now()->timestamp - $timestamp > 7200) {
                 Auth::logout();
                 session()->forget('impersonate_token');
-                $status = false;
             } else {
                 Auth::loginUsingId($originalUserId);
                 session()->forget('impersonate_token');
-                $status = true;
+                $this->session()->regenerate();
             }
 
-            return $this->wantsJson()
-            ? response()->json(['status' => $status])
-            : redirect(config('laravel-auth.routes.redirects.revert-impersonate'));
+            return redirect(config('laravel-auth.routes.redirects.revert-impersonate'))
 
         } catch (\Exception $e) {
             Auth::logout();
