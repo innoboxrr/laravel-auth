@@ -80,6 +80,6 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 		->middleware(config('laravel-auth.routes.middlewares.impersonate-token'))
 		->name(config('laravel-auth.routes.names.impersonate-token'));
 
-	Route::get(config('laravel-auth.routes.uris.revert-impersonate'), 'AuthenticationController@returnToOriginalUser')
+	Route::get(config('laravel-auth.routes.uris.revert-impersonate'), 'AuthenticationController@revertImpersonate')
 		->middleware(config('laravel-auth.routes.middlewares.revert-impersonate'))
 		->name(config('laravel-auth.routes.names.revert-impersonate'));

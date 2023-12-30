@@ -5,7 +5,7 @@ namespace Innoboxrr\LaravelAuth\Http\Requests\Impersonate;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class ImpersonateRequest extends FormRequest
+class ImpersonateTokenRequest extends FormRequest
 {
 
     protected static $authorizeImpersonateCallback = null;
