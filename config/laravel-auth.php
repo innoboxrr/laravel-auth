@@ -6,6 +6,8 @@ return [
 
 	'allow-registration' => true,
 
+	'allow-act-as' => true,
+
 	'routes' => [
 
 		/**
@@ -50,6 +52,10 @@ return [
 
 			'socialite-callback' => 'social/{provider}/callback',
 
+			'act-as' => 'act-as',
+
+			'return-to-original-user' => 'return-to-original-user',
+
 		],
 
 		'names' => [
@@ -82,7 +88,11 @@ return [
 
 			'socialite-redirect' => 'socialite.redirect',
 
-			'socialite-callback' => 'socialite.callback'
+			'socialite-callback' => 'socialite.callback',
+
+			'act-as' => 'act.as',
+
+			'return-to-original-user' => 'return.to.original.user',
 
 		],
 
@@ -117,6 +127,10 @@ return [
 			'socialite-redirect' => ['guest'],
 
 			'socialite-callback' => ['guest'],
+
+			'act-as' => ['auth:sanctum'],
+
+			'return-to-original-user' => ['auth:sanctum'],
 
 		],
 
@@ -153,6 +167,10 @@ return [
 			'socialite-redirect' => '/', // Esto lo determina Socialite
 
 			'socialite-callback' => '/',
+
+			'act-as' => '/',
+
+			'return-to-original-user' => '/',
 
 		],
 

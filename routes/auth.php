@@ -40,6 +40,14 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 	Route::get(config('laravel-auth.routes.uris.verification-verify'), 'AuthenticationController@verificationVerify')
 		->middleware(config('laravel-auth.routes.middlewares.verification-verify'))
 		->name(config('laravel-auth.routes.names.verification-verify'));
+	
+	Route::post(config('laravel-auth.routes.uris.act-as'), 'AuthenticationController@actAs')
+		->middleware(config('laravel-auth.routes.middlewares.act-as'))
+		->name(config('laravel-auth.routes.names.act-as'));
+	
+	Route::post(config('laravel-auth.routes.uris.return-to-original-user'), 'AuthenticationController@returnToOriginalUser')
+		->middleware(config('laravel-auth.routes.middlewares.return-to-original-user'))
+		->name(config('laravel-auth.routes.names.return-to-original-user'));
 
 // TOKEN
 
