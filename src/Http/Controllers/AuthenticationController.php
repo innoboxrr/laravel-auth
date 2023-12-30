@@ -11,8 +11,6 @@ use Innoboxrr\LaravelAuth\Http\Requests\Auth\UpdatePasswordRequest;
 use Innoboxrr\LaravelAuth\Http\Requests\Auth\EmailVerificationNotificationRequest as EVNRequest;
 use Innoboxrr\LaravelAuth\Http\Requests\Auth\VerificationVerifyRequest;
 use Innoboxrr\LaravelAuth\Http\Requests\Auth\GetAuthRequest;
-use Innoboxrr\LaravelAuth\Http\Requests\Auth\ActAsRequest;
-use Innoboxrr\LaravelAuth\Http\Requests\Auth\ReturnToOriginalUserRequest;
 
 class AuthenticationController extends Controller
 {
@@ -58,16 +56,6 @@ class AuthenticationController extends Controller
     }
 
     public function getAuth(GetAuthRequest $request)
-    {
-        return $request->handle();
-    }
-
-    public function actAs(ActAsRequest $request)
-    {
-        return $request->handle();
-    }
-
-    public function returnToOriginalUser(ReturnToOriginalUserRequest $request)
     {
         return $request->handle();
     }

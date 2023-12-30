@@ -40,14 +40,6 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 	Route::get(config('laravel-auth.routes.uris.verification-verify'), 'AuthenticationController@verificationVerify')
 		->middleware(config('laravel-auth.routes.middlewares.verification-verify'))
 		->name(config('laravel-auth.routes.names.verification-verify'));
-	
-	Route::post(config('laravel-auth.routes.uris.act-as'), 'AuthenticationController@actAs')
-		->middleware(config('laravel-auth.routes.middlewares.act-as'))
-		->name(config('laravel-auth.routes.names.act-as'));
-	
-	Route::post(config('laravel-auth.routes.uris.return-to-original-user'), 'AuthenticationController@returnToOriginalUser')
-		->middleware(config('laravel-auth.routes.middlewares.return-to-original-user'))
-		->name(config('laravel-auth.routes.names.return-to-original-user'));
 
 // TOKEN
 
@@ -77,3 +69,17 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 	Route::get(config('laravel-auth.routes.uris.socialite-callback'), 'SocialiteController@callback')
 		->middleware(config('laravel-auth.routes.middlewares.socialite-callback'))
 		->name(config('laravel-auth.routes.names.socialite-callback'));
+
+// Act As
+
+	Route::post(config('laravel-auth.routes.uris.impersonate'), 'AuthenticationController@impersonate')
+		->middleware(config('laravel-auth.routes.middlewares.impersonate'))
+		->name(config('laravel-auth.routes.names.impersonate'));
+	
+	Route::get(config('laravel-auth.routes.uris.impersonate-token'), 'AuthenticationController@impersonateToken')
+		->middleware(config('laravel-auth.routes.middlewares.impersonate-token'))
+		->name(config('laravel-auth.routes.names.impersonate-token'));
+
+	Route::get(config('laravel-auth.routes.uris.revert-impersonate'), 'AuthenticationController@returnToOriginalUser')
+		->middleware(config('laravel-auth.routes.middlewares.revert-impersonate'))
+		->name(config('laravel-auth.routes.names.revert-impersonate'));

@@ -6,7 +6,7 @@ return [
 
 	'allow-registration' => true,
 
-	'allow-act-as' => true,
+	'allow-impersonate' => true,
 
 	'routes' => [
 
@@ -52,9 +52,11 @@ return [
 
 			'socialite-callback' => 'social/{provider}/callback',
 
-			'act-as' => 'act-as',
+			'impersonate' => 'impersonate',
 
-			'return-to-original-user' => 'return-to-original-user',
+			'impersonate-token' => 'impersonate/{token}',
+
+			'revert-impersonate' => 'revert-impersonate',
 
 		],
 
@@ -90,9 +92,11 @@ return [
 
 			'socialite-callback' => 'socialite.callback',
 
-			'act-as' => 'act.as',
+			'impersonate' => 'impersonate',
 
-			'return-to-original-user' => 'return.to.original.user',
+			'imperonate-token' => 'impersonate.token', 
+
+			'revert-impersonate' => 'revert.impersonate',
 
 		],
 
@@ -128,9 +132,11 @@ return [
 
 			'socialite-callback' => ['guest'],
 
-			'act-as' => ['auth:sanctum'],
+			'impersonate' => [],
 
-			'return-to-original-user' => ['auth:sanctum'],
+			'imperonate-token' => [],
+
+			'revert-impersonate' => [],
 
 		],
 
@@ -168,9 +174,11 @@ return [
 
 			'socialite-callback' => '/',
 
-			'act-as' => '/',
+			'impersonate' => '/',
 
-			'return-to-original-user' => '/',
+			'imperonate-token' => '/',
+
+			'revert-impersonate' => '/',
 
 		],
 
