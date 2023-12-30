@@ -37,11 +37,10 @@ class ImpersonateTokenRequest extends FormRequest
     {
         try {
 
-            if (now()->timestamp - $this->timestamp > 60) return false;
+            if (now()->timestamp - $this->timestamp > 120) return false;
 
-            if ($this->originalUserId != $this->user()->id) return false;
-
-            if (static::$authorizeImpersonateCallback) return call_user_func(static::$authorizeImpersonateCallback, $this);
+            if (static::$authorizeImpersonateCallback) 
+                return call_user_func(static::$authorizeImpersonateCallback, $this);
 
             return true;
 
@@ -61,10 +60,19 @@ class ImpersonateTokenRequest extends FormRequest
 
     public function handle()
     {
-        Auth::loginUsingId($this->targetUserId);
+        $userClass = app(config('laravel-auth.user-class'));
+
+        $targetUser = $userClass::findOrFail($this->targetUserId);
+
+        auth()->login($targetUser);
+
         session()->put('impersonate_token', $this->token);
-        $this->session()->regenerate();
-        return redirect(config('laravel-auth.routes.redirects.impersonate-token'));
+
+        return view('laravel-auth::impersonate', [
+            'token' => $this->token,
+            'target_user' => $targetUser,
+            'timestamp' => $this->timestamp + 120,
+        ]);
     }
     
 }

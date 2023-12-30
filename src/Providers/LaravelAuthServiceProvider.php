@@ -27,6 +27,8 @@ class LaravelAuthServiceProvider extends ServiceProvider
     public function boot()
     {
         
+        $this->loadViewsFrom(__DIR__.'/../../resources/views', 'laravel-auth');
+
         if ($this->app->runningInConsole()) {
 
             $this->publishes([

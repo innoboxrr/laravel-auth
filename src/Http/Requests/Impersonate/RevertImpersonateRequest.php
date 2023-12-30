@@ -30,12 +30,14 @@ class RevertImpersonateRequest extends FormRequest
                 Auth::logout();
                 session()->forget('impersonate_token');
             } else {
-                Auth::loginUsingId($originalUserId);
+                $userClass = app(config('laravel-auth.user-class'));
+                $originalUser = $userClass::findOrFail($originalUserId);
+                auth()->login($originalUser);
                 session()->forget('impersonate_token');
                 $this->session()->regenerate();
             }
 
-            return redirect(config('laravel-auth.routes.redirects.revert-impersonate'))
+            return redirect(config('laravel-auth.routes.redirects.revert-impersonate'));
 
         } catch (\Exception $e) {
             Auth::logout();
