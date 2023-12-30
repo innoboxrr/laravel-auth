@@ -1,6 +1,6 @@
 <?php
 
-namespace Innoboxrr\LaravelAuth\Http\Requests\Auth;
+namespace Innoboxrr\LaravelAuth\Http\Requests\Impersonate;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
