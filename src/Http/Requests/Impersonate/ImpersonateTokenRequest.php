@@ -63,10 +63,8 @@ class ImpersonateTokenRequest extends FormRequest
     {
         Auth::loginUsingId($this->targetUserId);
         session()->put('impersonate_token', $this->token);
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Cambio de usuario realizado con éxito.'
-        ]);
+        $this->session()->regenerate();
+        return redirect(config('laravel-auth.routes.redirects.impersonate-token'))
     }
     
 }
