@@ -76,11 +76,7 @@ class CallbackRequest extends FormRequest
             }
      
         } catch (\Exception $e) {
-            
-            abort(500);
-
+            throw $e;
         }
-
     }   
-    
 }
