@@ -43,7 +43,7 @@ class CallbackRequest extends FormRequest
 
                 if (static::$customLoginCallback) {
         
-                    return call_user_func(static::$customLoginCallback, $finduser, $this->provider);
+                    return call_user_func(static::$customLoginCallback, $finduser, $this->provider, $providerUser);
         
                 }
 
