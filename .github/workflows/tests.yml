@@ -1,0 +1,13 @@
+name: Tests
+
+# La definicion vive en innoboxrr/.github para que sea la misma en todo el
+# ecosistema: instala, comprueba la sintaxis, audita contra la linea base y
+# corre la suite. Aqui solo se declara cuando corre.
+on:
+    push:
+        branches: [master]
+    pull_request:
+
+jobs:
+    tests:
+        uses: innoboxrr/.github/.github/workflows/php-tests.yml@main
