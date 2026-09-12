@@ -21,8 +21,9 @@
     ],
     "minimum-stability": "stable",
     "require-dev": {
-        "phpunit/phpunit": "^11.0.1",
-        "orchestra/testbench": "^9.0"
+        "phpunit/phpunit": "^11.5 || ^12.0",
+        "orchestra/testbench": "^11.0",
+        "innoboxrr/larapack-generator": "^7.0"
     },
     "extra": {
         "laravel": {
@@ -36,6 +37,8 @@
     },
     "require": {
         "laravel/sanctum": "^4.0",
-        "laravel/socialite": "^5.16"
+        "laravel/socialite": "^5.16",
+        "php": "^8.3",
+        "illuminate/support": "^13.0"
     }
 }
