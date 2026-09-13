@@ -7,50 +7,33 @@ use Illuminate\Support\Facades\Password;
 
 class ForgotPasswordRequest extends FormRequest
 {
-
     public function authorize(): bool
     {
-
         return true;
-
     }
 
     public function rules(): array
     {
-
         return [
-
             'email' => ['required', 'email'],
-
         ];
-
     }
 
+    /**
+     * Responde lo mismo exista o no la cuenta, e incluso si se frenó por pedir
+     * el enlace varias veces seguidas.
+     *
+     * Antes decía "No pudimos encontrar un usuario con esa dirección": la
+     * pantalla servía para averiguar qué correos tienen cuenta.
+     */
     public function handle()
     {
-        
-        $status = Password::sendResetLink($this->only('email'));
+        Password::sendResetLink($this->only('email'));
 
-        if ($status == Password::RESET_LINK_SENT) {
-        
-            $message = __('Se ha enviado un enlace de restablecimiento de contraseña a su dirección de correo electrónico.');
-        
-        } else {
-        
-            $message = __('No pudimos encontrar un usuario con esa dirección de correo electrónico.');
-        
-        }
+        $message = __('If the address is registered, we have emailed a password reset link.');
 
-        if ($this->wantsJson()) {
-        
-            return response()->json(['message' => $message]);
-        
-        } else {
-        
-            return back()->with('status', $message);
-        
-        }
-
+        return $this->wantsJson()
+            ? response()->json(['success' => true, 'message' => $message])
+            : back()->with('status', $message);
     }
-    
 }

@@ -28,6 +28,17 @@ return [
 
 	],
 
+	/**
+	 * Pantallas de la aplicación a las que enlazan los correos del paquete.
+	 */
+	'frontend' => [
+
+		// El enlace del correo de restablecer contraseña. El correo va
+		// codificado para URL.
+		'reset-password' => 'auth/reset-password/{token}/{email}',
+
+	],
+
 	'routes' => [
 
 		/**
