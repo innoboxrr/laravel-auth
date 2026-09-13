@@ -2,82 +2,73 @@
 
 namespace Innoboxrr\LaravelAuth\Tests;
 
-use Innoboxrr\LaravelAuth\Tests\App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Innoboxrr\LaravelAuth\Providers\EmailVerificationServiceProvider;
 use Innoboxrr\LaravelAuth\Providers\LaravelAuthServiceProvider;
+use Innoboxrr\LaravelAuth\Providers\ResetPasswordServiceProvider;
 use Innoboxrr\LaravelAuth\Providers\RouteServiceProvider;
+use Innoboxrr\LaravelAuth\Tests\App\Models\User;
 use Laravel\Sanctum\SanctumServiceProvider;
+use Orchestra\Testbench\TestCase as Testbench;
 
-class TestCase extends \Orchestra\Testbench\TestCase
+/**
+ * Una aplicación con los proveedores del paquete, Sanctum y un usuario que
+ * verifica su correo, usa tokens y sabe si es administrador.
+ */
+abstract class TestCase extends Testbench
 {
-
-    protected $password;
-
-    public function setUp(): void
+    protected function setUp(): void
     {
-        
         parent::setUp();
-        // additional setup
 
         $this->loadLaravelMigrations(['--database' => 'testing']);
-        
-        $this->artisan('migrate', ['--database' => 'testing'])->run();
 
-        $this->password = $this->getPassword();
-
-
+        // Sanctum ya no carga su migración solo: se publica. Aquí se usa la
+        // del vendor para que los tests de tokens tengan su tabla.
+        $this->loadMigrationsFrom(dirname(__DIR__).'/vendor/laravel/sanctum/database/migrations');
     }
 
-    protected function getPackageProviders($app)
+    protected function getPackageProviders($app): array
     {
-        
         return [
+            SanctumServiceProvider::class,
             LaravelAuthServiceProvider::class,
             RouteServiceProvider::class,
-            SanctumServiceProvider::class,
+            EmailVerificationServiceProvider::class,
+            ResetPasswordServiceProvider::class,
         ];
-
     }
 
-    protected function getEnvironmentSetUp($app)
+    protected function defineEnvironment($app): void
     {
-        
-        // perform environment setup
-
+        // La sesión y los tokens de suplantación se cifran.
+        $app['config']->set('app.key', 'base64:'.base64_encode(str_repeat('k', 32)));
+        $app['config']->set('auth.providers.users.model', User::class);
         $app['config']->set('laravel-auth.user-class', User::class);
-
     }
 
-    protected function createUser(array $attributes = [])
+    /**
+     * @param  array<string, mixed>  $attributes
+     */
+    protected function createUser(array $attributes = []): User
     {
-        $defaults = [
-            'id' => $this->getRandomDigit(),
+        return User::create(array_merge([
             'name' => 'John Doe',
             'email' => 'john@example.com',
             'password' => Hash::make('password'),
-        ];
-
-        return User::create(array_merge($defaults, $attributes));
+        ], $attributes));
     }
 
-    protected function getRandomDigit()
-    {   
-
-        // Genera 4 bytes aleatorios
-        $randomBytes = random_bytes(4); 
-        
-        // Convierte los bytes a un número entero sin signo
-        $randomNumber = unpack('L', $randomBytes)[1]; 
-
-        return $randomNumber;
-
-    }
-
-    protected function getPassword()
+    protected function createAdmin(array $attributes = []): User
     {
-
-        return password_hash(substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 8)), 0, 8), PASSWORD_DEFAULT);
-
+        return $this->createUser(['name' => 'Admin', 'email' => 'admin@example.com', ...$attributes]);
     }
 
+    /**
+     * La URI de una ruta del paquete, tal como la configura quien lo instala.
+     */
+    protected function authUri(string $name): string
+    {
+        return '/'.config('laravel-auth.routes.prefix').'/'.config("laravel-auth.routes.uris.{$name}");
+    }
 }
