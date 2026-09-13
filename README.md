@@ -1,4 +1,13 @@
-# Laravel Auth Package
+# Laravel Auth
+
+Autenticación completa para una aplicación Laravel 13 con una SPA delante: login,
+registro, recuperación y cambio de contraseña, verificación de correo, tokens de
+Sanctum, login social y suplantación de usuarios. Todo responde JSON cuando la
+petición lo pide y redirige cuando no.
+
+Es el backend de acceso de las aplicaciones que monta
+[innoboxrr/laravel-setup](https://github.com/innoboxrr/laravel-setup), en Vue o en
+React.
 
 ## Apoya Nuestro Trabajo 🙌
 
@@ -10,60 +19,198 @@ En particular, te recomendamos nuestro curso [Desarrollo de paquetes en Laravel 
 
 Gracias por considerar esta opción y por tu apoyo continuo a nuestra labor. ¡Apreciamos enormemente a nuestra comunidad!
 
-## Comenzando 🚀
+## Requisitos
 
-El paquete innoboxrr/laravel-auth nace ante la demanda de un sistema de autenticación completo y centralizado que se adapte a cualquier tipo de aplicación, ya sea una web convencional, una SPA o una APIRestful.
+| | Versión |
+|---|---|
+| PHP | ^8.3 |
+| Laravel | ^13.0 |
+| laravel/sanctum | ^4.0 |
+| laravel/socialite | ^5.16 |
 
-Nuestra ambición es que, a medida que el paquete evolucione, se consolide como una alternativa unificada y accesible, sin que su implementación requiera cambios significativos en la estructura de un proyecto existente. Además, estamos comprometidos con el desarrollo de estrategias de autenticación innovadoras y vanguardistas.
+## Instalación
 
-El paquete de Laravel Auth se destaca por su alto nivel de personalización. La implementación de Closures o funciones anónimas permite a los desarrolladores adaptar cada parte del código a sus necesidades específicas. Además, incluye un archivo de configuración con opciones para personalizar aún más su comportamiento.
+```bash
+composer require innoboxrr/laravel-auth
+php artisan install:api
+```
 
-¿Por qué elegir innoboxrr/laravel-auth en lugar de las soluciones de autenticación que Laravel ofrece actualmente? La respuesta es sencilla: flexibilidad y desacoplamiento. Este paquete ha sido diseñado para integrarse sin problemas con cualquier estructura de proyecto, minimizando los posibles conflictos.
+Las rutas se registran solas bajo `/auth`, en el grupo `web`, con nombres
+`auth.*`.
 
-En términos de seguridad, el paquete innoboxrr/laravel-auth adopta los mismos sistemas que Laravel recomienda y proporciona, pero de una manera unificada y armónica. Esto significa que puedes centrarte en desarrollar tu aplicación sin tener que preocuparte por cada aspecto de la implementación de la seguridad. Nuestro paquete se encarga de ello, dándote la tranquilidad de que tu aplicación está protegida.
+Lo que el paquete espera de la aplicación:
 
-## Pre-requisitos 📋
+- **Sanctum en modo SPA.** `$middleware->statefulApi()` en `bootstrap/app.php`,
+  para que la SPA use la cookie de sesión. Comprueba que `install:api` dejó
+  instalado Sanctum con `composer show laravel/sanctum`: usa el `composer` del
+  PATH y, si falla, no lo dice.
+- **El usuario** usa `Laravel\Sanctum\HasApiTokens` y `Notifiable`. Si implementa
+  `MustVerifyEmail`, se envía el correo de verificación al registrarse. Si define
+  `isAdmin()`, es quien puede suplantar a otros.
 
-### Requisitos del sistema:
-- PHP 8.1 o superior
-- Composer
+Para cambiar rutas, middleware, redirecciones o reglas de contraseña:
 
-### Dependencias
-- "laravel/sanctum": "^3.2",
-- "laravel/socialite": "^5.6"
+```bash
+php artisan vendor:publish --tag=laravel-auth-config
+```
 
-## Instalación 🔧
+## Uso desde una SPA
 
-Pasos para la instalación del proyecto.
+```js
+axios.defaults.withCredentials = true
+axios.defaults.withXSRFToken = true
 
-Para instalar el paquete solo debe ejecutar 
+await axios.get('/sanctum/csrf-cookie')
+const { data } = await axios.post('/auth/login', { email, password, remember: true })
+// data = { success: true, user: { ... } }
 
-``composer require innoboxrr/laravel-auth``
+const auth = await axios.get('/auth/get-auth')
+// { user, authenticated, is_admin, verified, impersonating }
+```
 
-## Ejecutando las pruebas ⚙️
+Los errores de validación llegan como los de cualquier FormRequest de Laravel:
+422 con `{ message, errors: { campo: [...] } }`.
 
-... En construcción
+## Rutas
 
+Todas bajo el prefijo `auth` y el nombre `auth.`.
 
-## Construido con 🛠️
+| Método | URI | Nombre | Middleware | Respuesta JSON |
+|---|---|---|---|---|
+| POST | `login` | `login` | guest | `{ success, user }`; 422 con credenciales inválidas o tras 5 intentos |
+| POST | `register` | `register` | guest | `{ success, user }`; 403 si `allow-registration` es false |
+| POST | `logout` | `logout` | auth:sanctum | `{ success }` |
+| GET | `get-auth` | `get.auth` | — | `{ user, authenticated, is_admin, verified, impersonating }` |
+| POST | `forgot-password` | `forgot.password` | guest | `{ success, message }`, igual exista o no la cuenta |
+| POST | `reset-password` | `reset.password` | guest | `{ success, message }`; 422 con token inválido |
+| POST | `update-password` | `update.password` | auth:sanctum | `{ success, message }`; 422 en `old_password` si no es la actual |
+| POST | `email-verification-notification` | `email.verification.notification` | auth:sanctum, throttle | `{ success, status }` con `verification-link-sent` o `already-verified` |
+| GET | `email/verify/{id}/{hash}` | `verification.verify` | auth:sanctum, signed, throttle | `{ verified }` |
+| POST | `create-token` | `create.token` | throttle:6,1 | `{ token }`; 422 con credenciales inválidas |
+| POST | `tokens` | `tokens` | auth:sanctum | `{ tokens }` |
+| POST | `revoke-token` | `revoke.token` | auth:sanctum | `{ revoked }` |
+| POST | `flush-tokens` | `flush.tokens` | auth:sanctum | `{ success, message }` |
+| GET | `social/{provider}/redirect` | `socialite.redirect` | guest | redirige al proveedor; 404 si no está configurado |
+| GET | `social/{provider}/callback` | `socialite.callback` | guest | entra o crea la cuenta y redirige |
+| POST | `impersonate` | `impersonate` | auth:sanctum | `{ token, url }` |
+| GET | `impersonate/{token}` | `impersonate.token` | auth:sanctum | `{ success, user }` o redirige |
+| GET | `revert-impersonate` | `revert.impersonate` | auth:sanctum | `{ success, user }` o redirige |
 
-Lista de tecnologías y herramientas utilizadas en el proyecto:
-- PHP
-- Laravel 10
-- Composer
+Cuando la petición no pide JSON, cada ruta redirige a `routes.redirects.*`.
 
-## Contributing 🖇️
+## Contraseñas
 
-Si desea colaborar dar sugerencias o reportar alguna falla en el código lo puede hacer a través de los issues de GitHub en: [https://github.com/innoboxrr/laravel-auth/issues](https://github.com/innoboxrr/laravel-auth/issues)
+```php
+'password' => [
+    'length' => 8,
+    'uppercase' => false,
+    'number' => false,
+],
+```
 
-## Versionado 📌
+Se aplican al registrarse, al restablecer y al cambiar la contraseña. El mensaje
+dice la regla que falla.
 
-El proyecto emplea un sistema de versionadao SemVer que le permite identificar la corrección de errores, la implementación de nuevas características así como actualizaciones mayores. En estos casos le proporcionaremos información detallada para realizar las actualizaciones correspondientes.
+## Recuperar la contraseña
+
+El correo enlaza a la pantalla de la aplicación que dice
+`frontend.reset-password` (por omisión `auth/reset-password/{token}/{email}`),
+con el correo codificado. Esa pantalla envía `token`, `email`, `password` y
+`password_confirmation` a `POST /auth/reset-password`.
+
+## Tokens
+
+`POST /auth/create-token` con `email`, `password`, `name` y, opcionales,
+`abilities` y `expires_at`. No inicia sesión: el token se usa como
+`Authorization: Bearer <token>` en las rutas con `auth:sanctum`.
+
+## Login social
+
+Declara el proveedor en `config/services.php`:
+
+```php
+'github' => [
+    'client_id' => env('GITHUB_CLIENT_ID'),
+    'client_secret' => env('GITHUB_CLIENT_SECRET'),
+    'redirect' => '/auth/social/github/callback',
+],
+```
+
+Un proveedor que no está ahí responde 404. La vuelta entra en la cuenta del
+correo que devuelve el proveedor o la crea.
+
+## Suplantar a un usuario
+
+Sólo puede quien pasa la habilidad de Gate `laravel-auth.impersonate`. Por
+omisión es un usuario cuyo modelo responde true a `isAdmin()`, nunca sobre sí
+mismo ni sobre otro administrador. Para otra regla, redefínela en tu
+`AuthServiceProvider`:
+
+```php
+Gate::define('laravel-auth.impersonate', fn ($user, $target = null) => $user->hasRole('soporte'));
+```
+
+El flujo:
+
+1. `POST /auth/impersonate` con `target_user_id` devuelve `{ token, url }`.
+2. Navegar a `url` inicia sesión como el usuario. El token sólo sirve a quien lo
+   pidió y durante dos minutos.
+3. `GET /auth/revert-impersonate` vuelve a la cuenta original. Pasadas dos horas
+   cierra la sesión en lugar de volver.
+
+Poner `allow-impersonate` en false desactiva todo.
+
+## Personalizar
+
+```php
+// Reglas del registro, por ejemplo para pedir más campos
+RegisterRequest::setCustomRulesCallback(fn ($request) => [...]);
+
+// Lo que responde get-auth
+GetAuthRequest::$customGetAuthCallback = fn ($user) => response()->json([...]);
+
+// Login social: entrar en una cuenta existente o registrar una nueva
+CallbackRequest::$customLoginCallback = fn ($user, $provider, $providerUser) => ...;
+CallbackRequest::$customRegisterCallback = fn ($providerUser, $provider) => ...;
+
+// Sustituir por completo quién puede suplantar
+ImpersonateRequest::authorizeUsing(fn ($request) => ...);
+```
+
+## Traducciones
+
+Los mensajes son claves en inglés y el paquete trae `lang/es.json`. Para
+corregirlos, añade la clave en el `lang/<idioma>.json` de la aplicación.
+
+## Actualizar de 5.x a 6.0
+
+- Las rutas de suplantación piden sesión, y sólo suplanta quien pasa
+  `laravel-auth.impersonate`. Entrar con el token responde JSON o redirige; ya no
+  hay vista `laravel-auth::impersonate`.
+- Las reglas de contraseña van en `password`, en la raíz de la configuración
+  (antes `routes.password`, donde nunca se leían).
+- `forgot-password` responde lo mismo exista o no la cuenta.
+- `reset-password` con token inválido responde 422.
+- `update-password` con la contraseña actual equivocada responde un error de
+  validación en `old_password`, no `{ error }`.
+- `email-verification-notification` responde `{ success, status }`.
+- `create-token` no inicia sesión, responde 422 con credenciales inválidas y
+  admite seis intentos por minuto.
+- `revoke-token` dice en `revoked` si se revocó algo.
+- Las redirecciones por omisión van a `/admin`, `/auth/login` y `/`.
+
+Si publicaste la configuración, compárala con la del paquete.
+
+## Pruebas
+
+```bash
+composer install
+vendor/bin/phpunit
+```
 
 ## Autores ✒️
 
-Lista de los autores del proyecto.
- - Homero Raul Vargas Cruz
+- Homero Raul Vargas Cruz
 
 ## Licencia 📄
 
@@ -80,46 +227,3 @@ Para ver la licencia completa, por favor visita el archivo LICENSE incluido en e
 Como en todos mis proyectos agradezco a mis padres, hermanos, esposa e hijos quienes son mi inspiración mi motor y razón de dar cada día siempre lo mejor de mi.
 
 ⌨️ con ❤️ por Homero Raul Vargas Cruz 😊
-
-## Notas para el desarrollador
-
-De manera general el listado de funciones que ofrece el paquete actualmente son:
-
-- Ruta `POST` para **registrar** al usuario
-- Ruta `POST` para **autenticar** al usuario
-- Ruta `POST` para **cerrar sesión** del usuario
-- Ruta `POST` para **enviar enlace de recuperación de cuenta** para restablecer la cuenta
-- Ruta `POST` para **restablecer la cuenta del usuario** mediente un hash de verificación.
-- Ruta `POST` para **mandar email de verificación** 
-- Ruta `POST` para **recuperar el usuario actualmente identificado**
-- Ruta `GET` para **verificar el correo** después de que el usuario ha dado clic en el correo de verificación.
-- Ruta `POST` para **crear un token de acceso**. Esto es util para identificaciones via API
-- Ruta `POST` para **recuperar los tokens** de un usuario actualmente identificado
-- Ruta `POST` para **revocar un token** especifico de un usuario
-- Ruta `POST` para **revocar todos los tokens** de un usuario identificado
-- Ruta `GET` para **login o registro con redes sociales**
-- Ruta `GET` para **confirmar el login con redes sociales**
-
-## Socialite
-
-El paquete viene configurado para el acceso con redes sociales mediente el paquete de Socialite. 
-Para añadir los provedores de servicio de Socialite, debe modificar el archivo de configuración de services
-
-```php
-
-<?php
-
-return [
-
-    // ...
-
-    'google' => [
-        'client_id' => 'ÇLIENT_ID',
-        'client_secret' => 'CLIEN_SECRET',
-        'redirect' => '/auth/social/google/callback',
-    ]
-
-];
-
-
-```
