@@ -181,39 +181,44 @@ return [
 		 **/
 		'redirects' => [
 
-			'login' => '/home',
+			// Sólo cuando la petición no pide JSON. Apuntan a las pantallas de la
+			// aplicación que monta innoboxrr/laravel-setup: el administrador en
+			// /admin y el acceso en /auth. Antes iban a /home y /tokens, que no
+			// existen en ninguna.
 
-			'register' => '/home',
+			'login' => '/admin',
 
-			'logout' => '/home',
+			'register' => '/admin',
 
-			'reset-password' => '/login', // Ruta de autenticación
+			'logout' => '/',
 
-			'update-password' => '/home', // Ruta de autenticación
+			'reset-password' => '/auth/login',
 
-			'email-verification-notification' => '/home',
+			'update-password' => '/admin',
 
-			'verification.verify' => '/home',
+			'email-verification-notification' => '/admin',
 
-			'get-auth' => '/home',
+			'verification-verify' => '/admin',
 
-			'create-token' => '/tokens',
+			'get-auth' => '/',
 
-			'tokens' => '/tokens',
+			'create-token' => '/',
 
-			'revoke-token' => '/tokens',
+			'tokens' => '/',
 
-			'flush-tokens' => '/tokens',
+			'revoke-token' => '/',
+
+			'flush-tokens' => '/',
 
 			'socialite-redirect' => '/', // Esto lo determina Socialite
 
-			'socialite-callback' => '/',
+			'socialite-callback' => '/admin',
 
 			'impersonate' => '/',
 
-			'impersonate-token' => '/',
+			'impersonate-token' => '/admin',
 
-			'revert-impersonate' => '/',
+			'revert-impersonate' => '/admin',
 
 		],
 
