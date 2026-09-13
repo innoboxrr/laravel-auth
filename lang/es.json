@@ -2,5 +2,7 @@
     "If the address is registered, we have emailed a password reset link.": "Si la dirección está registrada, te enviamos un enlace para restablecer la contraseña.",
     "The :attribute must be at least :length characters.": "El campo :attribute debe tener al menos :length caracteres.",
     "The :attribute must contain at least one number.": "El campo :attribute debe contener al menos un número.",
-    "The :attribute must contain at least one uppercase letter.": "El campo :attribute debe contener al menos una letra mayúscula."
+    "The :attribute must contain at least one uppercase letter.": "El campo :attribute debe contener al menos una letra mayúscula.",
+    "The current password is incorrect.": "La contraseña actual no es correcta.",
+    "Your password has been updated.": "Tu contraseña se actualizó."
 }

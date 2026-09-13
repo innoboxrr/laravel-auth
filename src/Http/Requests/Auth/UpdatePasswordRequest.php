@@ -2,64 +2,50 @@
 
 namespace Innoboxrr\LaravelAuth\Http\Requests\Auth;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Innoboxrr\LaravelAuth\Rules\SecurePassword;
+use Closure;
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
+use Innoboxrr\LaravelAuth\Rules\SecurePassword;
 
 class UpdatePasswordRequest extends FormRequest
 {
-
     public function authorize(): bool
     {
-
-        return true;
-
+        return $this->user() !== null;
     }
 
+    /**
+     * La contraseña actual se comprueba como una regla más. Antes era un 422
+     * con `{"error": "..."}`, fuera del formato de errores de validación, así
+     * que el formulario no sabía en qué campo pintarlo.
+     */
     public function rules(): array
     {
-
         return [
+            'old_password' => ['required', 'string', function (string $attribute, mixed $value, Closure $fail): void {
+                $user = $this->user();
 
-            'old_password' => ['required'],
-
+                if ($user === null || ! Hash::check((string) $value, $user->getAuthPassword())) {
+                    $fail(__('The current password is incorrect.'));
+                }
+            }],
             'password' => ['required', 'confirmed', new SecurePassword],
-
         ];
-
     }
 
     public function handle()
     {
-        // Obtener el usuario autenticado
         $user = $this->user();
 
-        // Verificar que la contraseña anterior proporcionada coincida con la contraseña actual del usuario
-        if (!Hash::check($this->input('old_password'), $user->password)) {
-            if ($this->wantsJson()) {
-                return response()->json(['error' => 'La contraseña anterior no es válida.'], 422);
-            }
-            return back()->withErrors(['old_password' => 'La contraseña anterior no es válida.']);
-        }
-
-        // Actualizar la contraseña del usuario con la nueva contraseña proporcionada
-        $user->update([
-            'password' => Hash::make($this->input('password')),
-        ]);
+        $user->forceFill(['password' => Hash::make((string) $this->input('password'))])->save();
 
         event(new PasswordReset($user));
 
-        if ($this->wantsJson()) {
-            
-            return response()->json(['message' => 'Contraseña actualizada correctamente.'], 200);
+        $message = __('Your password has been updated.');
 
-        }
-
-        // Redirigir a una ruta específica con un mensaje de éxito
-        return redirect(config('laravel-auth.routes.redirects.update-password'))
-            ->with('success', 'Contraseña actualizada correctamente.');
+        return $this->wantsJson()
+            ? response()->json(['success' => true, 'message' => $message])
+            : redirect(config('laravel-auth.routes.redirects.update-password'))->with('success', $message);
     }
-    
 }

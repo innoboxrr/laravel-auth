@@ -3,53 +3,38 @@
 namespace Innoboxrr\LaravelAuth\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Providers\RouteServiceProvider;
 
 class EmailVerificationNotificationRequest extends FormRequest
 {
-
-    public function authorize()
+    public function authorize(): bool
     {
-
-        return true;
-
+        return $this->user() !== null;
     }
 
-    public function rules()
+    public function rules(): array
     {
-    
         return [];
-    
     }
 
-    public function getResponse($status)
+    /**
+     * `status` dice qué pasó: `verification-link-sent` o `already-verified`.
+     * Antes `success` valía true en un caso y la cadena del estado en el otro.
+     */
+    public function getResponse(string $status)
     {
-
-        if ($this->wantsJson()) {
-
-            return response()->json(['success' => $status]);
-
-        } else {
-
-            return redirect(config('laravel-auth.routes.redirects.email-verification-notification'));
-
-        }
-
+        return $this->wantsJson()
+            ? response()->json(['success' => true, 'status' => $status])
+            : redirect(config('laravel-auth.routes.redirects.email-verification-notification'));
     }
-    
+
     public function handle()
     {
-
         if ($this->user()->hasVerifiedEmail()) {
-
-            return $this->getResponse(true);
-
+            return $this->getResponse('already-verified');
         }
 
         $this->user()->sendEmailVerificationNotification();
 
         return $this->getResponse('verification-link-sent');
-
     }
-    
 }
