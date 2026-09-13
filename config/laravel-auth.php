@@ -6,6 +6,12 @@ return [
 
 	'allow-registration' => true,
 
+	/**
+	 * Permite entrar como otro usuario. Aun activado, sólo puede quien pasa la
+	 * habilidad de Gate `laravel-auth.impersonate`: por omisión, un usuario
+	 * cuyo modelo responde true a isAdmin(), y nunca sobre sí mismo ni sobre
+	 * otro administrador. La aplicación la redefine en su AuthServiceProvider.
+	 */
 	'allow-impersonate' => true,
 
 	'routes' => [
@@ -132,11 +138,13 @@ return [
 
 			'socialite-callback' => ['guest'],
 
-			'impersonate' => [],
+			// Sin sesión no se suplanta a nadie. Quién puede, lo decide la
+			// habilidad `laravel-auth.impersonate` (ver allow-impersonate).
+			'impersonate' => ['auth:sanctum'],
 
-			'impersonate-token' => [],
+			'impersonate-token' => ['auth:sanctum'],
 
-			'revert-impersonate' => [],
+			'revert-impersonate' => ['auth:sanctum'],
 
 		],
 

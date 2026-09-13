@@ -5,12 +5,23 @@ namespace Innoboxrr\LaravelAuth\Http\Requests\Impersonate;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Vuelve a la cuenta de quien suplantaba.
+ *
+ * Una suplantación dura como mucho dos horas: pasado ese tiempo se cierra la
+ * sesión en lugar de devolver la cuenta original, por si quien suplantaba ya no
+ * está delante.
+ */
 class RevertImpersonateRequest extends FormRequest
 {
+    /**
+     * Segundos que puede durar una suplantación.
+     */
+    public const MAX_DURATION = 7200;
 
     public function authorize(): bool
     {
-        return session()->has('impersonate_token');
+        return $this->user() !== null && $this->session()->has('impersonate_token');
     }
 
     public function rules(): array
@@ -21,28 +32,33 @@ class RevertImpersonateRequest extends FormRequest
     public function handle()
     {
         try {
-            $sessionData = decrypt(session('impersonate_token'));
-            $originalUserId = $sessionData['original_user_id'];
-            $timestamp = $sessionData['timestamp'];
-            $status = false;
-
-            if (now()->timestamp - $timestamp > 7200) {
-                Auth::logout();
-                session()->forget('impersonate_token');
-            } else {
-                $userClass = app(config('laravel-auth.user-class'));
-                $originalUser = $userClass::findOrFail($originalUserId);
-                auth()->login($originalUser);
-                session()->forget('impersonate_token');
-                $this->session()->regenerate();
-            }
-
-            return redirect(config('laravel-auth.routes.redirects.revert-impersonate'));
-
-        } catch (\Exception $e) {
-            Auth::logout();
-            abort(500);
+            $payload = decrypt($this->session()->get('impersonate_token'));
+        } catch (\Throwable) {
+            $payload = null;
         }
+
+        $this->session()->forget('impersonate_token');
+
+        $userClass = config('laravel-auth.user-class');
+        $original = is_array($payload) ? $userClass::find($payload['original_user_id'] ?? null) : null;
+        $expired = ! is_array($payload) || now()->timestamp - (int) ($payload['timestamp'] ?? 0) > self::MAX_DURATION;
+
+        if ($original === null || $expired) {
+            Auth::guard('web')->logout();
+            $this->session()->invalidate();
+            $this->session()->regenerateToken();
+
+            return $this->wantsJson()
+                ? response()->json(['success' => false, 'user' => null])
+                : redirect(config('laravel-auth.routes.redirects.logout', '/'));
+        }
+
+        Auth::guard('web')->login($original);
+
+        $this->session()->regenerate();
+
+        return $this->wantsJson()
+            ? response()->json(['success' => true, 'user' => $original])
+            : redirect(config('laravel-auth.routes.redirects.revert-impersonate', '/'));
     }
-    
 }
