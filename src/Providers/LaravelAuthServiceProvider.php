@@ -15,6 +15,10 @@ class LaravelAuthServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // Los mensajes son claves en inglés; la aplicación los traduce en su
+        // lang/<idioma>.json, y el paquete trae el español.
+        $this->loadJsonTranslationsFrom(__DIR__.'/../../lang');
+
         $this->defineImpersonateAbility();
 
         if ($this->app->runningInConsole()) {

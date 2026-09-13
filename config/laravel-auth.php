@@ -14,6 +14,20 @@ return [
 	 */
 	'allow-impersonate' => true,
 
+	/**
+	 * Lo que se exige a una contraseña nueva, al registrarse, restablecerla o
+	 * cambiarla.
+	 */
+	'password' => [
+
+		'length' => 8,
+
+		'uppercase' => false,
+
+		'number' => false,
+
+	],
+
 	'routes' => [
 
 		/**
@@ -190,15 +204,11 @@ return [
 
 		],
 
-		'password' => [
-
-			'length' => 8,
-
-			'uppercase' => false,
-
-			'number' => false,
-
-		]
+		/**
+		 * Obsoleto: las reglas de contraseña van en `password`, arriba. Aquí
+		 * nunca se leyeron; se siguen respetando si una configuración
+		 * publicada todavía las tiene en este sitio.
+		 */
 
 	],
 
