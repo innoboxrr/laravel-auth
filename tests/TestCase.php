@@ -9,6 +9,7 @@ use Innoboxrr\LaravelAuth\Providers\ResetPasswordServiceProvider;
 use Innoboxrr\LaravelAuth\Providers\RouteServiceProvider;
 use Innoboxrr\LaravelAuth\Tests\App\Models\User;
 use Laravel\Sanctum\SanctumServiceProvider;
+use Laravel\Socialite\SocialiteServiceProvider;
 use Orchestra\Testbench\TestCase as Testbench;
 
 /**
@@ -32,6 +33,8 @@ abstract class TestCase extends Testbench
     {
         return [
             SanctumServiceProvider::class,
+            // En una aplicación llega por descubrimiento; Testbench no descubre.
+            SocialiteServiceProvider::class,
             LaravelAuthServiceProvider::class,
             RouteServiceProvider::class,
             EmailVerificationServiceProvider::class,
