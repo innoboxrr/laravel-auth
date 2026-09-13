@@ -1,4 +1,5 @@
 {
+    "All tokens have been revoked.": "Se revocaron todos los tokens.",
     "If the address is registered, we have emailed a password reset link.": "Si la dirección está registrada, te enviamos un enlace para restablecer la contraseña.",
     "The :attribute must be at least :length characters.": "El campo :attribute debe tener al menos :length caracteres.",
     "The :attribute must contain at least one number.": "El campo :attribute debe contener al menos un número.",

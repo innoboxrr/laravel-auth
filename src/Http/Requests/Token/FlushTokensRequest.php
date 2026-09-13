@@ -6,42 +6,29 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class FlushTokensRequest extends FormRequest
 {
-
-    public function authorize()
+    public function authorize(): bool
     {
-        
-        return true;
-
+        return $this->user() !== null;
     }
 
-    public function rules()
+    public function rules(): array
     {
-
         return [];
-
     }
 
     public function handle()
     {
-
         $this->user()->tokens()->delete();
-        
-        return $this->getResponse();
 
+        return $this->getResponse();
     }
 
     public function getResponse()
     {
+        $message = __('All tokens have been revoked.');
 
-        if ($this->wantsJson()) {
-       
-            return response()->json(['message' => 'All tokens have been revoked']);
-        
-        } else {
-
-            return redirect()->back()->with('status', 'All tokens have been revoked');
-        }
-
+        return $this->wantsJson()
+            ? response()->json(['success' => true, 'message' => $message])
+            : redirect()->back()->with('status', $message);
     }
-
 }

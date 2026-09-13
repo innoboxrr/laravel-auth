@@ -6,38 +6,25 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class TokensRequest extends FormRequest
 {
-
-    public function authorize()
+    public function authorize(): bool
     {
-        return true;
+        return $this->user() !== null;
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [];
     }
 
     public function handle()
     {
-        $tokens = $this->user()->tokens;
-
-        return $this->getResponse($tokens);
+        return $this->getResponse($this->user()->tokens);
     }
 
     public function getResponse($tokens)
     {
-
-        if ($this->wantsJson()) {
-
-            return response()->json(['tokens' => $tokens]);
-
-        } else {
-
-            return redirect(config('laravel-auth.routes.redirects.tokens'))
-                ->with('tokens', $tokens);
-
-        }
-    
+        return $this->wantsJson()
+            ? response()->json(['tokens' => $tokens])
+            : redirect(config('laravel-auth.routes.redirects.tokens'))->with('tokens', $tokens);
     }
-
 }

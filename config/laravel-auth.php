@@ -151,7 +151,9 @@ return [
 
 			'get-auth' => [],
 
-			'create-token' => [],
+			// Recibe correo y contraseña: sin freno, sirve para probar
+			// contraseñas por fuerza bruta.
+			'create-token' => ['throttle:6,1'],
 
 			'tokens' => ['auth:sanctum'],
 

@@ -2,76 +2,64 @@
 
 namespace Innoboxrr\LaravelAuth\Http\Requests\Token;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
+/**
+ * Crea un token de Sanctum para una integración sin sesión.
+ *
+ * Antes hacía `Auth::attempt`, que además inicia sesión en el navegador que
+ * pide el token; con credenciales malas no devolvía nada, un 200 vacío; y la
+ * caducidad se leía de `expires_at` aunque la regla validaba
+ * `expiration_date`. Se aceptan los dos nombres.
+ */
 class CreateTokenRequest extends FormRequest
 {
-
-    public function authorize()
+    public function authorize(): bool
     {
-
         return true;
-
     }
 
-    public function rules()
+    public function rules(): array
     {
-
         return [
-            'name' => ['required', 'string'],
+            'email' => ['required', 'email'],
+            'password' => ['required', 'string'],
+            'name' => ['required', 'string', 'max:255'],
             'abilities' => ['nullable', 'array'],
-            'expiration_date' => ['nullable', 'date', 'after:today'],
+            'abilities.*' => ['string'],
+            'expires_at' => ['nullable', 'date', 'after:now'],
+            'expiration_date' => ['nullable', 'date', 'after:now'],
         ];
-
     }
 
     public function handle()
     {
+        $userClass = config('laravel-auth.user-class');
 
-         $credentials = $this->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
+        $user = $userClass::where('email', $this->input('email'))->first();
 
-        if (Auth::attempt($credentials)) {
-
-            $userClass = app(config('laravel-auth.user-class', 'App\\Models\\User'));
-
-            $user = $userClass::where('email', $this->email)->firstOrFail();
-            
-            $abilities = ($this->abilities) ? $this->abilities : ['*'];
-
-            $token = $user->createToken($this->name, $abilities);
-
-            if ($this->expires_at) {
-
-                $token->token->expires_at = Carbon::parse($this->expires_at);
-
-                $token->token->save();
-
-            }
-
-            return $this->getResponse($token->plainTextToken);
-
+        if ($user === null || ! Hash::check((string) $this->input('password'), $user->getAuthPassword())) {
+            throw ValidationException::withMessages(['email' => __('auth.failed')]);
         }
 
+        $expiresAt = $this->input('expires_at', $this->input('expiration_date'));
+
+        $token = $user->createToken(
+            (string) $this->input('name'),
+            $this->input('abilities') ?: ['*'],
+            $expiresAt ? Carbon::parse($expiresAt) : null
+        );
+
+        return $this->getResponse($token->plainTextToken);
     }
 
-    public function getResponse($token)
+    public function getResponse(string $token)
     {
-        if ($this->wantsJson()) {
-
-            return response()->json(['token' => $token]);
-
-        } else {
-
-            return redirect(config('laravel-auth.routes.redirects.create-token'))
-                ->with('token', $token);;
-
-        }
-
+        return $this->wantsJson()
+            ? response()->json(['token' => $token])
+            : redirect(config('laravel-auth.routes.redirects.create-token'))->with('token', $token);
     }
-    
 }
