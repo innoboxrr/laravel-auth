@@ -5,6 +5,15 @@ Todas las modificaciones notables a este proyecto serán documentadas en este ar
 El formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto sigue [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [6.0.2] - 13-09-2026
+
+### Corregido
+
+- `get-auth` respondía `verified: false` a todo usuario que no hubiera
+  verificado su correo, aunque su modelo no implementara `MustVerifyEmail` y
+  Laravel nunca le enviara el correo: la SPA le pedía verificar algo imposible.
+  Ahora un usuario sin `MustVerifyEmail` cuenta como verificado.
+
 ## [6.0.1] - 13-09-2026
 
 ### Corregido
