@@ -5,6 +5,25 @@ Todas las modificaciones notables a este proyecto serán documentadas en este ar
 El formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto sigue [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [6.1.0] - 13-09-2026
+
+### Security
+
+- `revert-impersonate` era un GET que cambiaba la cuenta de la sesión. El
+  middleware CSRF no comprueba las peticiones de lectura, así que otro sitio
+  terminaba la suplantación de un administrador con un `<img>` o un enlace. Ahora
+  sólo acepta POST, en el grupo `web` y con token CSRF. El nombre
+  (`auth.revert.impersonate`), la URI y las respuestas no cambian: JSON a quien
+  lo pide, redirección a `routes.redirects.revert-impersonate` a quien no.
+
+### Cambio incompatible
+
+- Un GET a `revert-impersonate` ya no vuelve a la cuenta original: responde 405
+  o lo atiende el fallback de la aplicación, sin tocar la sesión. Quien lo llame
+  tiene que usar POST con el token CSRF: axios lo envía solo con la cookie
+  `XSRF-TOKEN` (`withXSRFToken`); un formulario de Blade, con `@csrf`. Ver
+  «Actualizar de 6.0 a 6.1» en el README.
+
 ## [6.0.3] - 13-09-2026
 
 ### Corregido
