@@ -5,6 +5,15 @@ Todas las modificaciones notables a este proyecto serán documentadas en este ar
 El formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto sigue [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [6.0.3] - 13-09-2026
+
+### Corregido
+
+- Cambiar la contraseña cerraba la sesión en la siguiente petición a la API:
+  `AuthenticateSession` (el de Laravel y el de las rutas stateful de Sanctum)
+  comparaba la huella de la contraseña guardada en la sesión con la nueva.
+  `update-password` ahora la renueva.
+
 ## [6.0.2] - 13-09-2026
 
 ### Corregido
