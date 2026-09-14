@@ -104,6 +104,27 @@ final class AccountTest extends TestCase
         $this->assertTrue(Hash::check('NuevaClave2026', $user->fresh()->password));
     }
 
+    /**
+     * AuthenticateSession compara la huella de la contraseña guardada en la
+     * sesión; si el cambio no la actualiza, la siguiente petición de la SPA a
+     * la API cierra la sesión (lo encontró el piloto de la aplicación base).
+     */
+    public function test_cambiar_la_contrasena_no_cierra_la_sesion(): void
+    {
+        $user = $this->createUser();
+        $guard = auth()->guard('web');
+
+        $this->actingAs($user, 'web')
+            ->withSession(['password_hash_web' => $guard->hashPasswordForCookie($user->getAuthPassword())])
+            ->postJson($this->authUri('update-password'), [
+                'old_password' => 'password',
+                'password' => 'NuevaClave2026',
+                'password_confirmation' => 'NuevaClave2026',
+            ])
+            ->assertOk()
+            ->assertSessionHas('password_hash_web', $guard->hashPasswordForCookie($user->fresh()->getAuthPassword()));
+    }
+
     public function test_un_invitado_no_cambia_contrasenas(): void
     {
         $this->postJson($this->authUri('update-password'), [
