@@ -254,3 +254,7 @@ Para ver la licencia completa, por favor visita el archivo LICENSE incluido en e
 Como en todos mis proyectos agradezco a mis padres, hermanos, esposa e hijos quienes son mi inspiración mi motor y razón de dar cada día siempre lo mejor de mi.
 
 ⌨️ con ❤️ por Homero Raul Vargas Cruz 😊
+
+## Documentación / Documentation
+
+Documentación completa del ecosistema, en español y en inglés / Full ecosystem documentation, in Spanish and English: <https://innoboxrr.github.io/docs/paquetes/laravel-auth>
