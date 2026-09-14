@@ -5,6 +5,16 @@ Todas las modificaciones notables a este proyecto serán documentadas en este ar
 El formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 y este proyecto sigue [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [6.0.1] - 13-09-2026
+
+### Corregido
+
+- El `RouteServiceProvider` del paquete heredaba del de Foundation, que al
+  arrancar vuelve a ejecutar el callback de `withRouting()`: la aplicación
+  registraba sus propias rutas una vez más. Ahora hereda de `ServiceProvider`,
+  registra las rutas del paquete en `boot()` y respeta la caché de rutas. Las
+  URIs, los nombres y los middlewares no cambian.
+
 ## [6.0.0] - 13-09-2026
 
 Autenticación lista para una SPA en Laravel 13, con tests de cada flujo. Hasta
