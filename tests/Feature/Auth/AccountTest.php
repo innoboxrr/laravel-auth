@@ -6,6 +6,7 @@ use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
+use Innoboxrr\LaravelAuth\Tests\App\Models\UserWithoutVerification;
 use Innoboxrr\LaravelAuth\Tests\TestCase;
 
 /**
@@ -29,6 +30,27 @@ final class AccountTest extends TestCase
             ->assertJson(['authenticated' => true, 'is_admin' => true, 'verified' => false, 'impersonating' => false])
             ->assertJsonPath('user.email', 'admin@example.com')
             ->assertJsonMissingPath('user.password');
+    }
+
+    /**
+     * Laravel sólo envía el correo de verificación a quien implementa
+     * MustVerifyEmail. Responder `verified: false` a los demás hacía que la SPA
+     * les pidiera verificar un correo que nunca iba a llegar.
+     */
+    public function test_un_usuario_sin_verificacion_de_correo_cuenta_como_verificado(): void
+    {
+        $user = UserWithoutVerification::forceCreate([
+            'name' => 'Sin verificación',
+            'email' => 'sin-verificacion@example.com',
+            'password' => Hash::make('password'),
+        ]);
+
+        $this->assertNull($user->email_verified_at);
+
+        $this->actingAs($user)
+            ->getJson($this->authUri('get-auth'))
+            ->assertOk()
+            ->assertJson(['authenticated' => true, 'verified' => true]);
     }
 
     public function test_el_login_devuelve_el_usuario(): void

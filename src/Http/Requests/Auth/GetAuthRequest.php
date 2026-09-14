@@ -2,6 +2,7 @@
 
 namespace Innoboxrr\LaravelAuth\Http\Requests\Auth;
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Http\FormRequest;
 
 class GetAuthRequest extends FormRequest
@@ -40,7 +41,10 @@ class GetAuthRequest extends FormRequest
             'user' => $user,
             'authenticated' => $user !== null,
             'is_admin' => $user !== null && method_exists($user, 'isAdmin') && (bool) $user->isAdmin(),
-            'verified' => $user !== null && method_exists($user, 'hasVerifiedEmail') && $user->hasVerifiedEmail(),
+            // Un usuario que no implementa MustVerifyEmail no tiene nada que
+            // verificar: Laravel no le envía el correo, y responder false hacía
+            // que la SPA le pidiera verificar un correo que nunca iba a llegar.
+            'verified' => $user !== null && (! $user instanceof MustVerifyEmail || $user->hasVerifiedEmail()),
             'impersonating' => $this->hasSession() && $this->session()->has('impersonate_token'),
         ]);
     }
