@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Auth;
  * Una suplantación dura como mucho dos horas: pasado ese tiempo se cierra la
  * sesión en lugar de devolver la cuenta original, por si quien suplantaba ya no
  * está delante.
+ *
+ * Llega sólo por POST, dentro del grupo `web` y con su token CSRF. Cuando era un
+ * GET, otro sitio terminaba la suplantación con un <img> o un enlace.
  */
 class RevertImpersonateRequest extends FormRequest
 {

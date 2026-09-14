@@ -80,6 +80,10 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 		->middleware(config('laravel-auth.routes.middlewares.impersonate-token'))
 		->name(config('laravel-auth.routes.names.impersonate-token'));
 
-	Route::get(config('laravel-auth.routes.uris.revert-impersonate'), 'ImpersonateController@revertImpersonate')
+	// POST y no GET: cambia la cuenta de la sesión, y el middleware CSRF del
+	// grupo `web` no comprueba las peticiones de lectura. Por GET, otro sitio
+	// terminaba la suplantación con un <img>. Sin ruta GET, esa petición responde
+	// 405 (o la atiende el fallback de la aplicación) y no toca la sesión.
+	Route::post(config('laravel-auth.routes.uris.revert-impersonate'), 'ImpersonateController@revertImpersonate')
 		->middleware(config('laravel-auth.routes.middlewares.revert-impersonate'))
 		->name(config('laravel-auth.routes.names.revert-impersonate'));

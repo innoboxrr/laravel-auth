@@ -2,7 +2,9 @@
 
 namespace Innoboxrr\LaravelAuth\Tests\Feature\Auth;
 
+use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Support\Facades\Gate;
+use Innoboxrr\LaravelAuth\Tests\App\Models\User;
 use Innoboxrr\LaravelAuth\Tests\TestCase;
 
 /**
@@ -88,21 +90,67 @@ final class ImpersonateTest extends TestCase
 
     public function test_con_el_token_el_administrador_entra_como_el_usuario_y_puede_volver(): void
     {
-        $admin = $this->createAdmin();
-        $user = $this->createUser();
+        [$admin] = $this->impersonating();
 
-        $token = $this->actingAs($admin)
-            ->postJson($this->authUri('impersonate'), ['target_user_id' => $user->id])
-            ->json('token');
+        $this->postJson($this->authUri('revert-impersonate'))->assertOk()->assertJson(['success' => true, 'user' => ['id' => $admin->id]]);
 
-        $this->getJson($this->tokenUri($token))->assertOk()->assertJson(['success' => true]);
+        $this->assertAuthenticatedAs($admin, 'web');
+        $this->assertFalse(session()->has('impersonate_token'));
+    }
 
-        // El paquete inicia sesión en el guard web. En un test, el guard de
-        // Sanctum conserva el usuario que resolvió en la petición anterior;
-        // en una aplicación cada petición empieza de cero.
+    public function test_volver_sin_pedir_json_redirige(): void
+    {
+        [$admin] = $this->impersonating();
+
+        $this->post($this->authUri('revert-impersonate'))->assertRedirect(config('laravel-auth.routes.redirects.revert-impersonate'));
+
+        $this->assertAuthenticatedAs($admin, 'web');
+    }
+
+    /**
+     * Volver cambia la cuenta de la sesión. Cuando era un GET, otro sitio lo
+     * disparaba con un <img> o un enlace: el middleware CSRF no mira las
+     * peticiones de lectura. Ya no hay ruta GET; en una aplicación responde
+     * 405 o su fallback, pero nunca toca la sesión.
+     */
+    public function test_un_get_no_termina_la_suplantacion(): void
+    {
+        [, $user] = $this->impersonating();
+
+        $this->get($this->authUri('revert-impersonate'))->assertMethodNotAllowed();
+
         $this->assertAuthenticatedAs($user, 'web');
+        $this->assertTrue(session()->has('impersonate_token'), 'Un GET terminó la suplantación.');
+    }
 
-        $this->getJson($this->authUri('revert-impersonate'))->assertOk()->assertJson(['success' => true]);
+    public function test_un_post_de_otro_sitio_sin_token_csrf_no_termina_la_suplantacion(): void
+    {
+        [, $user] = $this->impersonating();
+
+        $this->enforceCsrf();
+
+        $this->withHeader('Sec-Fetch-Site', 'cross-site')
+            ->post($this->authUri('revert-impersonate'))
+            ->assertStatus(419);
+
+        $this->assertAuthenticatedAs($user, 'web');
+        $this->assertTrue(session()->has('impersonate_token'), 'Un POST sin token CSRF terminó la suplantación.');
+    }
+
+    /**
+     * La otra mitad del test anterior: con el middleware CSRF activo, el token
+     * de la sesión basta. Sin esto, el 419 podría venir de otra cosa.
+     */
+    public function test_un_post_con_el_token_csrf_de_la_sesion_termina_la_suplantacion(): void
+    {
+        [$admin] = $this->impersonating();
+
+        $this->enforceCsrf();
+
+        $this->withHeader('X-CSRF-TOKEN', session()->token())
+            ->postJson($this->authUri('revert-impersonate'))
+            ->assertOk()
+            ->assertJson(['success' => true]);
 
         $this->assertAuthenticatedAs($admin, 'web');
     }
@@ -110,7 +158,7 @@ final class ImpersonateTest extends TestCase
     public function test_sin_suplantacion_en_curso_no_hay_nada_que_revertir(): void
     {
         $this->actingAs($this->createUser())
-            ->getJson($this->authUri('revert-impersonate'))
+            ->postJson($this->authUri('revert-impersonate'))
             ->assertForbidden();
     }
 
@@ -141,6 +189,48 @@ final class ImpersonateTest extends TestCase
         $this->actingAs($this->createAdmin())
             ->postJson($this->authUri('impersonate'), ['target_user_id' => $user->id])
             ->assertForbidden();
+    }
+
+    /**
+     * Un administrador que ya entró como un usuario con el token.
+     *
+     * @return array{0: User, 1: User}
+     */
+    private function impersonating(): array
+    {
+        $admin = $this->createAdmin();
+        $user = $this->createUser();
+
+        $token = $this->actingAs($admin)
+            ->postJson($this->authUri('impersonate'), ['target_user_id' => $user->id])
+            ->json('token');
+
+        $this->getJson($this->tokenUri($token))->assertOk()->assertJson(['success' => true]);
+
+        // El paquete inicia sesión en el guard web. En un test, el guard de
+        // Sanctum conserva el usuario que resolvió en la petición anterior;
+        // en una aplicación cada petición empieza de cero.
+        $this->assertAuthenticatedAs($user, 'web');
+        $this->assertTrue(session()->has('impersonate_token'));
+
+        return [$admin, $user];
+    }
+
+    /**
+     * Laravel no comprueba el token CSRF mientras corren los tests
+     * (PreventRequestForgery::runningUnitTests()), así que un POST sin token
+     * pasaría igual. Aquí el middleware del grupo `web` se comporta como en una
+     * aplicación.
+     */
+    private function enforceCsrf(): void
+    {
+        $this->app->bind(PreventRequestForgery::class, fn ($app) => new class($app, $app['encrypter']) extends PreventRequestForgery
+        {
+            protected function runningUnitTests()
+            {
+                return false;
+            }
+        });
     }
 
     private function tokenUri(string $token): string

@@ -94,7 +94,7 @@ Todas bajo el prefijo `auth` y el nombre `auth.`.
 | GET | `social/{provider}/callback` | `socialite.callback` | guest | entra o crea la cuenta y redirige |
 | POST | `impersonate` | `impersonate` | auth:sanctum | `{ token, url }` |
 | GET | `impersonate/{token}` | `impersonate.token` | auth:sanctum | `{ success, user }` o redirige |
-| GET | `revert-impersonate` | `revert.impersonate` | auth:sanctum | `{ success, user }` o redirige |
+| POST | `revert-impersonate` | `revert.impersonate` | auth:sanctum | `{ success, user }` o redirige; con token CSRF |
 
 Cuando la petición no pide JSON, cada ruta redirige a `routes.redirects.*`.
 
@@ -155,8 +155,22 @@ El flujo:
 1. `POST /auth/impersonate` con `target_user_id` devuelve `{ token, url }`.
 2. Navegar a `url` inicia sesión como el usuario. El token sólo sirve a quien lo
    pidió y durante dos minutos.
-3. `GET /auth/revert-impersonate` vuelve a la cuenta original. Pasadas dos horas
-   cierra la sesión en lugar de volver.
+3. `POST /auth/revert-impersonate`, con el token CSRF, vuelve a la cuenta
+   original. Pasadas dos horas cierra la sesión en lugar de volver.
+
+```js
+// axios envía X-XSRF-TOKEN desde la cookie XSRF-TOKEN
+axios.defaults.withXSRFToken = true
+
+await axios.post('/auth/revert-impersonate')
+```
+
+```blade
+<form method="POST" action="{{ route('auth.revert.impersonate') }}">
+    @csrf
+    <button>Volver a mi cuenta</button>
+</form>
+```
 
 Poner `allow-impersonate` en false desactiva todo.
 
@@ -181,6 +195,19 @@ ImpersonateRequest::authorizeUsing(fn ($request) => ...);
 
 Los mensajes son claves en inglés y el paquete trae `lang/es.json`. Para
 corregirlos, añade la clave en el `lang/<idioma>.json` de la aplicación.
+
+## Actualizar de 6.0 a 6.1
+
+- **`revert-impersonate` sólo acepta POST.** Era un GET que cambiaba la cuenta de
+  la sesión, y otro sitio lo disparaba con un `<img>` o un enlace sin pasar por el
+  token CSRF. Cambia cada llamada de `GET` a `POST` con el token CSRF (ver
+  «Suplantar a un usuario»). Un enlace `<a href="/auth/revert-impersonate">`
+  tiene que ser un formulario o un botón que haga el POST.
+- El nombre `auth.revert.impersonate`, la URI, el middleware y las respuestas no
+  cambian.
+- Un GET que quede sin cambiar ya no vuelve a la cuenta original: responde 405, o
+  lo atiende el fallback de la aplicación si tiene uno, y la sesión sigue como
+  estaba.
 
 ## Actualizar de 5.x a 6.0
 
